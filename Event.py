@@ -30,12 +30,19 @@ class Event:
   def __init__(self, time):
     '''
     Constructs Event instance
-  
+    
     Keyword arguments:
     time -- Time of occurring of this event
     '''
     self.time = time
-	
+  
+  @property
+  def time(self):
+    '''
+    Returns time of occurring
+    '''
+    return self.time
+  
   def trigger_action(self):
     '''
     Prints time of occurring when triggered
@@ -44,12 +51,12 @@ class Event:
 
 
 class EventTests(unittest.TestCase):
-	def setUp(self):
-		self.e = Event(10)
-		
-	def test_trigger_action(self):
-	  self.e.trigger_action()
+  def setUp(self):
+    self.e = Event(10)
+	
+  def test_trigger_action(self):
+    self.e.trigger_action()
 
 
 if __name__ == '__main__':
-	unittest.main()
+  unittest.main()

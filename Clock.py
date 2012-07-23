@@ -27,18 +27,40 @@ class Clock:
   '''
   Represents DES simulation clock
   '''
-	def __init__(self):
-	  '''
-	  Constructs Clock instance
-	  '''
-	  # Initialize time NOW to 0
-		self.time_now = 0
+  def __init__(self):
+    '''
+    Constructs Clock instance
+    '''
+    # Initialize current simulation time to 0
+    self.simulation_time = 0
+
+  @property
+  def simulation_time(self):
+    '''
+    Returns current simulation time
+    '''
+    return self.simulation_time
+	
+  @simulation_time.setter
+  def simulation_time(self, time):
+    '''
+    Sets current simulation time
+    
+    Keyword arguments:
+    time -- Next simulation time
+    '''
+    self.simulation_time = time
+	
 
 
 class ClockTests(unittest.TestCase):
-	def setUp(self):
-		pass
+  def setUp(self):
+    self.c = Clock()
+  
+  def test_simulation_time(self):
+    self.c.simulation_time = 5
+    self.assertEquals(self.c.simulation_time, 5)
 
 
 if __name__ == '__main__':
-	unittest.main()
+  unittest.main()

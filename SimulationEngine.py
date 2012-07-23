@@ -23,7 +23,7 @@ import os
 import unittest
 
 from Clock import *
-from EventList import *
+from Event import *
 
 
 class SimulationEngine:
@@ -31,32 +31,41 @@ class SimulationEngine:
   Represents the main engine of a DES simulation
   platform
   '''
-	def __init__(self):
-		'''
-		Constructs SimulationEngine instance
-		'''
-		# Create empty event list
-		self.event_list = EventList()
-		# Create clock
-		self.clock = Clock()
-	
-	def add_events(self, events):
-	  '''
-	  Populates event list
-	  '''
-	  for e in events:
-  	  self.event_list.add(e)
+  def __init__(self):
+    '''
+    Constructs SimulationEngine instance
+    '''
+    # Create empty event list
+    self.event_list = []
+    # Create clock
+    self.clock = Clock()
   
-  def start(self, duration):
+  def start(self):
     '''
     Starts simulation
     '''
+    while len(self.event_list) != 0:
+      # Remove the imminent event from the event list
+      first = self.event_list.pop(0)
+      # Advance clock to the next event
+      if len(self.event_list) > 1:
+        self.clock.simulation_time = self.event_list[0].time
+      # Execute the imminent event
+      first.trigger_action()
+  
 
 
 class SimulationEngineTests(unittest.TestCase):
-	def setUp(self):
-		pass
+  def setUp(self):
+    # Create new simulation
+    self.sim = SimulationEngine()
+  
+  def test_start(self):
+    # Create a set of deterministic events
+    self.sim.event_list = [Event(1), Event(2), Event(5), Event(9)]
+    # Start simulating
+    self.sim.start()
 
 
 if __name__ == '__main__':
-	unittest.main()
+  unittest.main()
