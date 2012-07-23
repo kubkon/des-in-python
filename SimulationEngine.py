@@ -4,7 +4,7 @@
 SimulationEngine.py
 
 Created by Jakub Konka on 2012-07-23.
-Copyright (c) 2012 Jakub Konka. All rights reserved.
+Copyright (c) 2012 Jakub Konka.
 
 This library is free software; you can redistribute it and/or
 modify under the terms of the GNU General Public License as
