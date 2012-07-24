@@ -32,24 +32,24 @@ class Clock:
     Constructs Clock instance
     '''
     # Initialize current simulation time to 0
-    self.simulation_time = 0
+    self._simulation_time = 0
 
   @property
   def simulation_time(self):
     '''
     Returns current simulation time
     '''
-    return self.simulation_time
+    return self._simulation_time
 	
   @simulation_time.setter
-  def simulation_time(self, time):
+  def simulation_time(self, simulation_time):
     '''
     Sets current simulation time
     
     Keyword arguments:
     time -- Next simulation time
     '''
-    self.simulation_time = time
+    self._simulation_time = simulation_time
 	
 
 class ClockTests(unittest.TestCase):
@@ -57,8 +57,8 @@ class ClockTests(unittest.TestCase):
     self.c = Clock()
   
   def test_simulation_time(self):
-    self.c.simulation_time = 5
-    self.assertEquals(self.c.simulation_time, 5)
+    self.c._simulation_time = 5
+    self.assertEquals(self.c._simulation_time, 5)
 
 
 if __name__ == '__main__':

@@ -36,31 +36,31 @@ class SimulationEngine:
     Constructs SimulationEngine instance
     '''
     # Create empty event list
-    self.event_list = []
+    self._event_list = []
     # Create clock
-    self.clock = Clock()
+    self._clock = Clock()
     # Initialize finish time
-    self.finish_time = 0
+    self._finish_time = 0
     # Flag representing finishing event
-    self.finish_event_exists = False
+    self._finish_event_exists = False
   
   def start(self):
     '''
     Starts simulation
     '''
     # Schedule first event
-    self._schedule(Event(self.clock.simulation_time))
+    self._schedule(Event(self._clock.simulation_time))
     # Traverse the event list
-    while len(self.event_list) > 0:
+    while len(self._event_list) > 0:
       # Remove the imminent event from the event list
-      imminent = self.event_list.pop()
+      imminent = self._event_list.pop()
       # Advance clock to the imminent event
-      self.clock.simulation_time = imminent.time
+      self._clock.simulation_time = imminent.time
       # Execute the imminent event
       imminent.trigger_action()
       # Schedule any additional events
       delta_time = random.randint(1, 5)
-      self._schedule(Event(self.clock.simulation_time + delta_time))
+      self._schedule(Event(self._clock.simulation_time + delta_time))
   
   def stop(self, finish_time):
     '''
@@ -70,20 +70,15 @@ class SimulationEngine:
     finish_time -- Time of occurrence of the finishing event
     '''
     # Check if finishing event already scheduled
-    if not self.finish_event_exists:
-      self.finish_time = finish_time
-      # Remove any scheduled event with time of occurrence
-      # exceeding the time of occurrence of the finishing
-      # event
-      removed = filter(lambda e: e.time > self.finish_time, self.event_list)
-      if len(removed) > 0:
-        self.event_list = [e for e in self.event_list if e not in removed]
+    if not self._finish_event_exists:
+      # Set finish time
+      self._finish_time = finish_time
       # Schedule finishing event
-      self.event_list += [Event(self.finish_time)]
-      self.finish_event_exists = True
+      self._event_list += [Event(self._finish_time)]
+      self._finish_event_exists = True
       # Sort the list so that finishing event is first (LIFO)
-      self.event_list.sort(key=lambda x: x.time)
-      self.event_list.reverse()
+      self._event_list.sort(key=lambda x: x.time)
+      self._event_list.reverse()
   
   def _schedule(self, event):
     '''
@@ -93,12 +88,12 @@ class SimulationEngine:
     event -- Event to be scheduled
     '''
     # Discard new event if happens after the finishing event
-    if event.time < self.finish_time:
+    if event.time < self._finish_time:
       # Add the event to the event list
-      self.event_list += [event]
+      self._event_list += [event]
       # Sort the list in a LIFO style
-      self.event_list.sort(key=lambda x: x.time)
-      self.event_list.reverse()
+      self._event_list.sort(key=lambda x: x.time)
+      self._event_list.reverse()
   
 
 class SimulationEngineTests(unittest.TestCase):

@@ -34,20 +34,20 @@ class Event:
     Keyword arguments:
     time -- Time of occurring of this event
     '''
-    self.time = time
+    self._time = time
   
   @property
   def time(self):
     '''
     Returns time of occurring
     '''
-    return self.time
+    return self._time
   
   def trigger_action(self):
     '''
     Prints time of occurring when triggered
     '''
-    print("{}: event was triggered".format(self.time))
+    print("{}: event was triggered".format(self._time))
 
 
 class EventTests(unittest.TestCase):
