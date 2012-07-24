@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-Event.py
+EventHandler.py
 
 Created by Jakub Konka on 2012-07-23.
 Copyright (c) 2012 Jakub Konka.
@@ -20,49 +20,33 @@ http://www.gnu.org/licenses/gpl-3.0.html
 
 import sys
 import os
-import unittest
 
 
-class Event(object):
+class EventHandler(object):
   '''
-  Represents an abstract event
+  Abstract base class for event handlers
   '''
-  def __init__(self, identifier, time):
+  def __init__(self, simulation_engine):
     '''
-    Constructs Event instance
+    Constructs EventHandler object
+    '''
+    self._simulation_engine = simulation_engine
+  
+  def generate_event(self, simulation_time):
+    '''
+    Abstract method for generating events
     
     Keyword arguments:
-    identifier -- ID/type of this event
-    time -- Time of occurring of this event
+    simulation_time -- Current simulation time
     '''
-    self._identifier = identifier
-    self._time = time
+    raise NotImplementedError("Method generate_event needs to be implemented")
   
-  @property
-  def identifier(self):
+  def handle_event(self, event):
     '''
-    Returns id of this event
+    Abstract method for handling events
+    
+    Keyword arguments:
+    event -- Event to be handled
     '''
-    return self._identifier
+    raise NotImplementedError("Method generate_event needs to be implemented")
   
-  @property
-  def time(self):
-    '''
-    Returns time of occurring
-    '''
-    return self._time
-  
-
-
-class EventTests(unittest.TestCase):
-  def setUp(self):
-    self.e = Event("Arrival", 10)
-  
-  def test_properties(self):
-    self.assertEquals(self.e.identifier, "Arrival")
-    self.assertEquals(self.e.time, 10)
-  
-
-
-if __name__ == '__main__':
-  unittest.main()

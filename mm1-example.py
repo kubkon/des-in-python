@@ -21,9 +21,32 @@ http://www.gnu.org/licenses/gpl-3.0.html
 import sys
 import os
 
+from SimulationEngine import *
+from MM1EventHandler import *
+
 
 def main():
-  pass
+  ### Params
+  # Mean interarrival time of customers (per second)
+  interarrival_time = 0.05
+  # Mean service time by the teller (per second)
+  service_time = 0.1
+  
+  ### Initialize
+  # Create new simulation engine
+  sim = SimulationEngine()
+  # Create MM1 specific event handler
+  event_handler = MM1EventHandler(sim)
+  event_handler.interarrival_time = interarrival_time
+  event_handler.service_time = service_time
+  # Register event handler with the simulation engine
+  sim.event_handler = event_handler
+  
+  ### Simulate
+  # Schedule finishing event
+  sim.stop(100)
+  # Start simulating
+  sim.start()
 
 
 if __name__ == '__main__':

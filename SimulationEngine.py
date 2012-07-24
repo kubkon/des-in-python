@@ -25,9 +25,10 @@ import random
 
 from Clock import *
 from Event import *
+from EventHandler import *
 
 
-class SimulationEngine:
+class SimulationEngine(object):
   '''
   Represents the main engine of a DES simulation platform
   '''
@@ -43,24 +44,42 @@ class SimulationEngine:
     self._finish_time = 0
     # Flag representing finishing event
     self._finish_event_exists = False
+    # Initialize event handler
+    self._event_handler = None
+  
+  @property
+  def event_handler(self):
+    '''
+    Returns registered event handler
+    '''
+    return self._event_handler
+  
+  @event_handler.setter
+  def event_handler(self, event_handler):
+    '''
+    Registers event handler
+    
+    Keyword arguments:
+    event_handler -- Event handler to be used
+    '''
+    self._event_handler = event_handler
   
   def start(self):
     '''
     Starts simulation
     '''
     # Schedule first event
-    self._schedule(Event(self._clock.simulation_time))
+    self._event_handler.generate_event(self._clock.simulation_time)
     # Traverse the event list
     while len(self._event_list) > 0:
       # Remove the imminent event from the event list
       imminent = self._event_list.pop()
       # Advance clock to the imminent event
       self._clock.simulation_time = imminent.time
-      # Execute the imminent event
-      imminent.trigger_action()
+      # Pass the imminent event to the event handler
+      self._event_handler.handle_event(imminent)
       # Schedule any additional events
-      delta_time = random.randint(1, 5)
-      self._schedule(Event(self._clock.simulation_time + delta_time))
+      self._event_handler.generate_event(self._clock.simulation_time)
   
   def stop(self, finish_time):
     '''
@@ -74,13 +93,13 @@ class SimulationEngine:
       # Set finish time
       self._finish_time = finish_time
       # Schedule finishing event
-      self._event_list += [Event(self._finish_time)]
+      self._event_list += [Event("End", self._finish_time)]
       self._finish_event_exists = True
       # Sort the list so that finishing event is first (LIFO)
       self._event_list.sort(key=lambda x: x.time)
       self._event_list.reverse()
   
-  def _schedule(self, event):
+  def schedule(self, event):
     '''
     Schedules event (adds it to the event list)
     
@@ -101,11 +120,10 @@ class SimulationEngineTests(unittest.TestCase):
     # Create new simulation
     self.sim = SimulationEngine()
   
-  def test_simulation(self):
-    # Schedule finishing event
-    self.sim.stop(100)
-    # Start simulating
-    self.sim.start()
+  def test_event_handler(self):
+    eh = EventHandler(self.sim)
+    self.sim.event_handler = eh
+    self.assertEquals(self.sim.event_handler, eh)
 
 
 if __name__ == '__main__':

@@ -23,7 +23,7 @@ import os
 import unittest
 
 
-class Clock:
+class Clock(object):
   '''
   Represents DES simulation clock
   '''
