@@ -52,7 +52,6 @@ class Clock:
     self.simulation_time = time
 	
 
-
 class ClockTests(unittest.TestCase):
   def setUp(self):
     self.c = Clock()
