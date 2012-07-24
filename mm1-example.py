@@ -27,24 +27,26 @@ from MM1EventHandler import *
 
 def main():
   ### Params
-  # Mean interarrival time of customers (per second)
-  interarrival_time = 5
-  # Mean service time by the teller (per second)
-  service_time = 1
+  # Mean interarrival rate of customers per second;
+  # hence, 0.05 <=> 3 people/minute
+  interarrival_rate = 0.05
+  # Mean service rate by the teller per second;
+  # hence, 0.1 <=> 6 people/minute
+  service_rate = 0.1
   
   ### Initialize
   # Create new simulation engine
   sim = SimulationEngine()
   # Create MM1 specific event handler
   event_handler = MM1EventHandler(sim)
-  event_handler.interarrival_time = interarrival_time
-  event_handler.service_time = service_time
+  event_handler.interarrival_rate = interarrival_rate
+  event_handler.service_rate = service_rate
   # Register event handler with the simulation engine
   sim.event_handler = event_handler
   
   ### Simulate
   # Schedule finishing event
-  sim.stop(10)
+  sim.stop(60*5)
   # Start simulating
   sim.start()
 

@@ -95,9 +95,6 @@ class SimulationEngine(object):
       # Schedule finishing event
       self._event_list += [Event("End", self._finish_time)]
       self._finish_event_exists = True
-      # Sort the list so that finishing event is first (LIFO)
-      self._event_list.sort(key=lambda x: x.time)
-      self._event_list.reverse()
   
   def schedule(self, event):
     '''

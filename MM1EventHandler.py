@@ -37,48 +37,48 @@ class MM1EventHandler(EventHandler):
     '''
     super(MM1EventHandler, self).__init__(simulation_engine)
     # Initialize mean interarrival time
-    self._interarrival_time = 0
+    self._interarrival_rate = 0
     # Initialize mean service time
-    self._service_time = 0
+    self._service_rate = 0
     # Initialize lenght of queue
     self._queue_length = 0
     # Initialize is processing flag
     self._is_processing = False
   
   @property
-  def interarrival_time(self):
+  def interarrival_rate(self):
     '''
-    Returns mean interarrival time
+    Returns mean interarrival rate
     '''
-    return self._interarrival_time
+    return self._interarrival_rate
   
-  @interarrival_time.setter
-  def interarrival_time(self, interarrival_time):
+  @interarrival_rate.setter
+  def interarrival_rate(self, interarrival_rate):
     '''
-    Sets mean interarrival time
+    Sets mean interarrival rate
     '''
-    self._interarrival_time = interarrival_time
+    self._interarrival_rate = interarrival_rate
   
   @property
-  def service_time(self):
+  def service_rate(self):
     '''
-    Returns mean service time
+    Returns mean service rate
     '''
-    return self._service_time
+    return self._service_rate
   
-  @service_time.setter
-  def service_time(self, service_time):
+  @service_rate.setter
+  def service_rate(self, service_rate):
     '''
-    Sets mean service time
+    Sets mean service rate
     '''
-    self._service_time = service_time
+    self._service_rate = service_rate
   
   def generate_event(self, simulation_time):
     '''
     Overriden
     '''
     # Next customer arrival time
-    delta_time = random.expovariate(1 / self._interarrival_time)
+    delta_time = random.expovariate(self._interarrival_rate)
     event = Event("Arrival", simulation_time + delta_time)
     # Schedule event
     self._simulation_engine.schedule(event)
@@ -100,7 +100,7 @@ class MM1EventHandler(EventHandler):
     # Process customer if free and queue is not empty
     if not self._is_processing and self._queue_length > 0:
       # Compute service time
-      delta_time = random.expovariate(self._service_time)
+      delta_time = random.expovariate(self._service_rate)
       dep_event = Event("Departure", event.time + delta_time)
       self._simulation_engine.schedule(dep_event)
       self._is_processing = True
@@ -112,10 +112,10 @@ class MM1EventHandlerTests(unittest.TestCase):
     self.eh = MM1EventHandler(None)
     
   def test_properties(self):
-    self.eh.interarrival_time = 0.05
-    self.eh.service_time = 0.1
-    self.assertEquals(self.eh.interarrival_time, 0.05)
-    self.assertEquals(self.eh.service_time, 0.1)
+    self.eh.interarrival_rate = 0.05
+    self.eh.service_rate = 0.1
+    self.assertEquals(self.eh.interarrival_rate, 0.05)
+    self.assertEquals(self.eh.service_rate, 0.1)
 
 if __name__ == '__main__':
   unittest.main()
