@@ -23,9 +23,7 @@ import os
 import unittest
 import random
 
-from Clock import *
 from Event import *
-from EventHandler import *
 
 
 class SimulationEngine(object):
@@ -38,52 +36,46 @@ class SimulationEngine(object):
     '''
     # Create empty event list
     self._event_list = []
-    # Create clock
-    self._clock = Clock()
+    # Initialize current simulation time
+    self._simulation_time = 0
     # Initialize finish time
     self._finish_time = 0
     # Flag representing finishing event
     self._finish_event_exists = False
-    # Initialize event handler
-    self._event_handler = None
-    # Initialize callback list
-    self._callback_list = []
+    # Initialize callback dictionary
+    self._callback_dict = {'start': [], 'stop': [], 'event': []}
   
   @property
-  def event_handler(self):
+  def simulation_time(self):
     '''
-    Returns registered event handler
+    Returns current simulation time
     '''
-    return self._event_handler
+    return self._simulation_time
   
-  @event_handler.setter
-  def event_handler(self, event_handler):
+  @simulation_time.setter
+  def simulation_time(self, simulation_time):
     '''
-    Registers event handler
-    
-    Keyword arguments:
-    event_handler -- Event handler to be used
+    Sets current simulation time
     '''
-    self._event_handler = event_handler
+    self._simulation_time = simulation_time
   
   def start(self):
     '''
     Starts simulation
     '''
-    # Schedule first event
-    self._event_handler.generate_event(self._clock.simulation_time)
+    # Notify of the start of simulation; event handlers should
+    # generate first event
+    self._notify_start()
     # Traverse the event list
     while len(self._event_list) > 0:
       # Remove the imminent event from the event list
       imminent = self._event_list.pop()
       # Advance clock to the imminent event
-      self._clock.simulation_time = imminent.time
-      # Pass the imminent event to the event handler
-      self._event_handler.handle_event(imminent)
-      # Schedule any additional events
-      self._event_handler.generate_event(self._clock.simulation_time)
-    # Notify interested parties about the end of the simulation
-    self._exec_callbacks()
+      self._simulation_time = imminent.time
+      # Notify of the current event
+      self._notify_event(imminent)
+    # Notify of the end of the simulation
+    self._notify_stop()
   
   def stop(self, finish_time):
     '''
@@ -115,32 +107,39 @@ class SimulationEngine(object):
       self._event_list.sort(key=lambda x: x.time)
       self._event_list.reverse()
   
-  def register_callback(self, func):
+  def register_callback(self, func, ttype):
     '''
     Register function for callback when simulation ends
     
     Keyword arguments:
     func -- Function to call back
+    ttype -- Type of the callback
     '''
-    self._callback_list += [func]
+    self._callback_dict[ttype] += [func]
   
-  def _exec_callbacks(self):
+  def _notify_start(self):
     '''
-    Calls back objects registered for notifications
+    Notifies of start of the simulation
     '''
-    for func in self._callback_list: func()
+    for func in self._callback_dict['start']: func()
+  
+  def _notify_stop(self):
+    '''
+    Notifies of stop of the simulation 
+    '''
+    for func in self._callback_dict['stop']: func()
+  
+  def _notify_event(self, event):
+    '''
+    Notifies of an imminent event 
+    '''
+    for func in self._callback_dict['event']: func(event)
   
 
 class SimulationEngineTests(unittest.TestCase):
   def setUp(self):
-    # Create new simulation
-    self.sim = SimulationEngine()
+    pass
   
-  def test_event_handler(self):
-    eh = EventHandler(self.sim)
-    self.sim.event_handler = eh
-    self.assertEquals(self.sim.event_handler, eh)
-
 
 if __name__ == '__main__':
   unittest.main()

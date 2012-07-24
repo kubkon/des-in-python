@@ -25,6 +25,7 @@ import random
 
 from EventHandler import *
 from Event import *
+from SimulationEngine import *
 
 
 class MM1EventHandler(EventHandler):
@@ -48,8 +49,6 @@ class MM1EventHandler(EventHandler):
     self._arrivals = []
     # Initialize list of departure times
     self._departures = []
-    # Register for callback when simulation ends
-    self._simulation_engine.register_callback(self.print_statistics)
   
   @property
   def interarrival_rate(self):
@@ -79,21 +78,23 @@ class MM1EventHandler(EventHandler):
     '''
     self._service_rate = service_rate
   
-  def generate_event(self, simulation_time):
+  def _handle_start(self):
     '''
-    Overriden
+    Overriden method
     '''
-    # Next customer arrival time
-    delta_time = random.expovariate(self._interarrival_rate)
-    event = Event("Arrival", simulation_time + delta_time)
-    # Schedule event
-    self._simulation_engine.schedule(event)
+    self._schedule_arrival_event(self._simulation_engine.simulation_time)
   
-  def handle_event(self, event):
+  def _handle_stop(self):
     '''
-    Overriden
+    Overriden method
     '''
-    # Print the event
+    self._print_statistics()
+  
+  def _handle_event(self, event):
+    '''
+    Overriden method
+    '''
+    # Print the imminent event
     print("{}: {}".format(event.time, event.identifier))
     # Increment the queue length based on the event id
     if event.identifier == "Arrival":
@@ -105,13 +106,36 @@ class MM1EventHandler(EventHandler):
       self._is_processing = False
     # Process customer if free and queue is not empty
     if not self._is_processing and self._queue_length > 0:
-      # Compute service time
-      delta_time = random.expovariate(self._service_rate)
-      dep_event = Event("Departure", event.time + delta_time)
-      self._simulation_engine.schedule(dep_event)
-      self._is_processing = True
+      # Schedule next departure event
+      self._schedule_departure_event(event.time)
+    # Schedule next arrival event
+    self._schedule_arrival_event(event.time)
   
-  def print_statistics(self):
+  def _schedule_arrival_event(self, base_time):
+    '''
+    Schedules next arrival event
+    '''
+    # Calculate interarrival time
+    delta_time = random.expovariate(self._interarrival_rate)
+    # Create next arrival event
+    event = Event("Arrival", base_time + delta_time)
+    # Schedule the event
+    self._simulation_engine.schedule(event)
+  
+  def _schedule_departure_event(self, base_time):
+    '''
+    Schedules next departure event
+    '''
+    # Calculate service time
+    delta_time = random.expovariate(self._service_rate)
+    # Create next departure event
+    event = Event("Departure", base_time + delta_time)
+    # Schedule the event
+    self._simulation_engine.schedule(event)
+    # Set is processing flag to True
+    self._is_processing = True
+  
+  def _print_statistics(self):
     '''
     Prints some statistics when simulation ends
     '''
@@ -130,7 +154,7 @@ class MM1EventHandler(EventHandler):
 
 class MM1EventHandlerTests(unittest.TestCase):
   def setUp(self):
-    self.eh = MM1EventHandler(None)
+    self.eh = MM1EventHandler(SimulationEngine())
     
   def test_properties(self):
     self.eh.interarrival_rate = 0.05

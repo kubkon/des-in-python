@@ -30,23 +30,34 @@ class EventHandler(object):
     '''
     Constructs EventHandler object
     '''
+    # Assign simulation engine object
     self._simulation_engine = simulation_engine
+    # Register callback functions:
+    # start of the simulation
+    self._simulation_engine.register_callback(self._handle_start, 'start')
+    # stop of the simulation
+    self._simulation_engine.register_callback(self._handle_stop, 'stop')
+    # imminent event
+    self._simulation_engine.register_callback(self._handle_event, 'event')
   
-  def generate_event(self, simulation_time):
+  def _handle_start(self):
     '''
-    Abstract method for generating events
+    Abstract method for handling start of the simulation
+    '''
+    raise NotImplementedError("Method not implemented")
+  
+  def _handle_stop(self):
+    '''
+    Abstract method for handling stop of the simulation
+    '''
+    raise NotImplementedError("Method not implemented")
     
-    Keyword arguments:
-    simulation_time -- Current simulation time
+  def _handle_event(self, event):
     '''
-    raise NotImplementedError("Method generate_event needs to be implemented")
-  
-  def handle_event(self, event):
-    '''
-    Abstract method for handling events
+    Abstract method for handling imminent events
     
     Keyword arguments:
     event -- Event to be handled
     '''
-    raise NotImplementedError("Method generate_event needs to be implemented")
+    raise NotImplementedError("Method not implemented")
   
