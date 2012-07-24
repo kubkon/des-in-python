@@ -53,7 +53,6 @@ class Event(object):
     return self._time
   
 
-
 class EventTests(unittest.TestCase):
   def setUp(self):
     self.e = Event("Arrival", 10)
@@ -62,7 +61,6 @@ class EventTests(unittest.TestCase):
     self.assertEquals(self.e.identifier, "Arrival")
     self.assertEquals(self.e.time, 10)
   
-
 
 if __name__ == '__main__':
   unittest.main()

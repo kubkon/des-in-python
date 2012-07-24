@@ -30,6 +30,13 @@ class SimulationEngine(object):
   '''
   Represents the main engine of a DES simulation platform
   '''
+  # ID of the finishing event
+  END_EVENT = "End"
+  # Callback types
+  START_CALLBACK = "start"
+  STOP_CALLBACK = "stop"
+  EVENT_CALLBACK = "event"
+  
   def __init__(self):
     '''
     Constructs SimulationEngine instance
@@ -43,7 +50,7 @@ class SimulationEngine(object):
     # Flag representing finishing event
     self._finish_event_exists = False
     # Initialize callback dictionary
-    self._callback_dict = {'start': [], 'stop': [], 'event': []}
+    self._callback_dict = {self.START_CALLBACK: [], self.STOP_CALLBACK: [], self.EVENT_CALLBACK: []}
   
   @property
   def simulation_time(self):
@@ -89,7 +96,7 @@ class SimulationEngine(object):
       # Set finish time
       self._finish_time = finish_time
       # Schedule finishing event
-      self._event_list += [Event("End", self._finish_time)]
+      self._event_list += [Event(self.END_EVENT, self._finish_time)]
       self._finish_event_exists = True
   
   def schedule(self, event):
@@ -121,19 +128,19 @@ class SimulationEngine(object):
     '''
     Notifies of start of the simulation
     '''
-    for func in self._callback_dict['start']: func()
+    for func in self._callback_dict[self.START_CALLBACK]: func()
   
   def _notify_stop(self):
     '''
     Notifies of stop of the simulation 
     '''
-    for func in self._callback_dict['stop']: func()
+    for func in self._callback_dict[self.STOP_CALLBACK]: func()
   
   def _notify_event(self, event):
     '''
     Notifies of an imminent event 
     '''
-    for func in self._callback_dict['event']: func(event)
+    for func in self._callback_dict[self.EVENT_CALLBACK]: func(event)
   
 
 class SimulationEngineTests(unittest.TestCase):

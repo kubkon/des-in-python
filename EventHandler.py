@@ -21,6 +21,8 @@ http://www.gnu.org/licenses/gpl-3.0.html
 import sys
 import os
 
+from SimulationEngine import *
+
 
 class EventHandler(object):
   '''
@@ -34,11 +36,11 @@ class EventHandler(object):
     self._simulation_engine = simulation_engine
     # Register callback functions:
     # start of the simulation
-    self._simulation_engine.register_callback(self._handle_start, 'start')
+    self._simulation_engine.register_callback(self._handle_start, self._simulation_engine.START_CALLBACK)
     # stop of the simulation
-    self._simulation_engine.register_callback(self._handle_stop, 'stop')
+    self._simulation_engine.register_callback(self._handle_stop, self._simulation_engine.STOP_CALLBACK)
     # imminent event
-    self._simulation_engine.register_callback(self._handle_event, 'event')
+    self._simulation_engine.register_callback(self._handle_event, self._simulation_engine.EVENT_CALLBACK)
   
   def _handle_start(self):
     '''
