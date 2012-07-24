@@ -28,9 +28,9 @@ from MM1EventHandler import *
 def main():
   ### Params
   # Mean interarrival time of customers (per second)
-  interarrival_time = 0.05
+  interarrival_time = 5
   # Mean service time by the teller (per second)
-  service_time = 0.1
+  service_time = 1
   
   ### Initialize
   # Create new simulation engine
@@ -44,7 +44,7 @@ def main():
   
   ### Simulate
   # Schedule finishing event
-  sim.stop(100)
+  sim.stop(10)
   # Start simulating
   sim.start()
 

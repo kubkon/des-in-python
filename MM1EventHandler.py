@@ -21,8 +21,10 @@ http://www.gnu.org/licenses/gpl-3.0.html
 import sys
 import os
 import unittest
+import random
 
 from EventHandler import *
+from Event import *
 
 
 class MM1EventHandler(EventHandler):
@@ -75,13 +77,34 @@ class MM1EventHandler(EventHandler):
     '''
     Overriden
     '''
-    pass
+    # Next customer arrival time
+    delta_time = random.expovariate(1 / self._interarrival_time)
+    event = Event("Arrival", simulation_time + delta_time)
+    # Schedule event
+    self._simulation_engine.schedule(event)
   
   def handle_event(self, event):
     '''
     Overriden
     '''
-    pass
+    # Print the event
+    print("{}: {}".format(event.time, event.identifier))
+    # Increment the queue length based on the event id
+    if event.identifier == "Arrival":
+      self._queue_length += 1
+    elif event.identifier == "Departure":
+      self._queue_length -= 1
+      self._is_processing = False
+    else:
+      self._is_processing = False
+    # Process customer if free and queue is not empty
+    if not self._is_processing and self._queue_length > 0:
+      # Compute service time
+      delta_time = random.expovariate(self._service_time)
+      dep_event = Event("Departure", event.time + delta_time)
+      self._simulation_engine.schedule(dep_event)
+      self._is_processing = True
+    print("Queue length: {}".format(self._queue_length))
   
 
 class MM1EventHandlerTests(unittest.TestCase):
