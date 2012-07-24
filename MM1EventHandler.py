@@ -44,6 +44,12 @@ class MM1EventHandler(EventHandler):
     self._queue_length = 0
     # Initialize is processing flag
     self._is_processing = False
+    # Initialize list of arrival times
+    self._arrivals = []
+    # Initialize list of departure times
+    self._departures = []
+    # Register for callback when simulation ends
+    self._simulation_engine.register_callback(self.print_statistics)
   
   @property
   def interarrival_rate(self):
@@ -92,10 +98,10 @@ class MM1EventHandler(EventHandler):
     # Increment the queue length based on the event id
     if event.identifier == "Arrival":
       self._queue_length += 1
-    elif event.identifier == "Departure":
+      self._arrivals += [event.time]
+    if event.identifier == "Departure":
       self._queue_length -= 1
-      self._is_processing = False
-    else:
+      self._departures += [event.time]
       self._is_processing = False
     # Process customer if free and queue is not empty
     if not self._is_processing and self._queue_length > 0:
@@ -104,7 +110,22 @@ class MM1EventHandler(EventHandler):
       dep_event = Event("Departure", event.time + delta_time)
       self._simulation_engine.schedule(dep_event)
       self._is_processing = True
-    print("Queue length: {}".format(self._queue_length))
+  
+  def print_statistics(self):
+    '''
+    Prints some statistics when simulation ends
+    '''
+    # Calculate mean waiting time in the queue
+    arrivals_len = len(self._arrivals)
+    departures_len = len(self._departures)
+    print(arrivals_len)
+    print(departures_len)
+    if arrivals_len >= departures_len:
+      self._arrivals = self._arrivals[:departures_len]
+    else:
+      self._departures = self._departures[:arrivals_len]
+    waiting_times = list(map(lambda x,y: x-y, self._departures, self._arrivals))
+    print("Mean waiting time: {}".format(sum(waiting_times) / len(waiting_times)))
   
 
 class MM1EventHandlerTests(unittest.TestCase):

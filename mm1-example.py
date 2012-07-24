@@ -46,7 +46,7 @@ def main():
   
   ### Simulate
   # Schedule finishing event
-  sim.stop(60*5)
+  sim.stop(60*60)
   # Start simulating
   sim.start()
 

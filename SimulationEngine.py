@@ -46,6 +46,8 @@ class SimulationEngine(object):
     self._finish_event_exists = False
     # Initialize event handler
     self._event_handler = None
+    # Initialize callback list
+    self._callback_list = []
   
   @property
   def event_handler(self):
@@ -80,6 +82,8 @@ class SimulationEngine(object):
       self._event_handler.handle_event(imminent)
       # Schedule any additional events
       self._event_handler.generate_event(self._clock.simulation_time)
+    # Notify interested parties about the end of the simulation
+    self._exec_callbacks()
   
   def stop(self, finish_time):
     '''
@@ -110,6 +114,21 @@ class SimulationEngine(object):
       # Sort the list in a LIFO style
       self._event_list.sort(key=lambda x: x.time)
       self._event_list.reverse()
+  
+  def register_callback(self, func):
+    '''
+    Register function for callback when simulation ends
+    
+    Keyword arguments:
+    func -- Function to call back
+    '''
+    self._callback_list += [func]
+  
+  def _exec_callbacks(self):
+    '''
+    Calls back objects registered for notifications
+    '''
+    for func in self._callback_list: func()
   
 
 class SimulationEngineTests(unittest.TestCase):
