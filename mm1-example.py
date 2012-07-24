@@ -45,8 +45,8 @@ def main():
   sim.event_handler = event_handler
   
   ### Simulate
-  # Schedule finishing event
-  sim.stop(60)
+  # Schedule finishing event; simulate for 24h
+  sim.stop(60*60*24)
   # Start simulating
   sim.start()
 

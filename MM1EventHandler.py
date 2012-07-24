@@ -95,21 +95,26 @@ class MM1EventHandler(EventHandler):
     Overriden method
     '''
     # Print the imminent event
-    print("{}: {}".format(event.time, event.identifier))
-    # Increment the queue length based on the event id
+    # print("{}: {}".format(event.time, event.identifier))
+    # Check event's identifier
     if event.identifier == "Arrival":
+      # Increment the queue length
       self._queue_length += 1
+      # Record event's arrival time (stats)
       self._arrivals += [event.time]
+      # Schedule next arrival event
+      self._schedule_arrival_event(event.time)
     if event.identifier == "Departure":
+      # Decrement the queue length
       self._queue_length -= 1
+      # Record event's departure time (stats)
       self._departures += [event.time]
+      # Set is processing flag to False
       self._is_processing = False
-    # Process customer if free and queue is not empty
+    # Service customer if free and queue is not empty
     if not self._is_processing and self._queue_length > 0:
       # Schedule next departure event
       self._schedule_departure_event(event.time)
-    # Schedule next arrival event
-    self._schedule_arrival_event(event.time)
   
   def _schedule_arrival_event(self, base_time):
     '''
@@ -142,14 +147,15 @@ class MM1EventHandler(EventHandler):
     # Calculate mean waiting time in the queue
     arrivals_len = len(self._arrivals)
     departures_len = len(self._departures)
-    print(arrivals_len)
-    print(departures_len)
-    if arrivals_len >= departures_len:
-      self._arrivals = self._arrivals[:departures_len]
+    if arrivals_len == 0 or departures_len == 0:
+      print("Mean waiting time unavailable")
     else:
-      self._departures = self._departures[:arrivals_len]
-    waiting_times = list(map(lambda x,y: x-y, self._departures, self._arrivals))
-    print("Mean waiting time: {}".format(sum(waiting_times) / len(waiting_times)))
+      if arrivals_len >= departures_len:
+        self._arrivals = self._arrivals[:departures_len]
+      else:
+        self._departures = self._departures[:arrivals_len]
+      waiting_times = list(map(lambda x,y: x-y, self._departures, self._arrivals))
+      print("Mean waiting time: {}".format(sum(waiting_times) / len(waiting_times)))
   
 
 class MM1EventHandlerTests(unittest.TestCase):
