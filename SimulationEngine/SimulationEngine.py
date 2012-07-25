@@ -50,7 +50,7 @@ class SimulationEngine(object):
     # Flag representing finishing event
     self._finish_event_exists = False
     # Initialize callback dictionary
-    self._callback_dict = {self.START_CALLBACK: [], self.STOP_CALLBACK: [], self.EVENT_CALLBACK: []}
+    self._callback_dict = {SimulationEngine.START_CALLBACK: [], SimulationEngine.STOP_CALLBACK: [], SimulationEngine.EVENT_CALLBACK: []}
   
   @property
   def simulation_time(self):
@@ -96,7 +96,7 @@ class SimulationEngine(object):
       # Set finish time
       self._finish_time = finish_time
       # Schedule finishing event
-      self._event_list += [Event(self.END_EVENT, self._finish_time)]
+      self._event_list += [Event(SimulationEngine.END_EVENT, self._finish_time)]
       self._finish_event_exists = True
   
   def schedule(self, event):
@@ -128,19 +128,19 @@ class SimulationEngine(object):
     '''
     Notifies of start of the simulation
     '''
-    for func in self._callback_dict[self.START_CALLBACK]: func()
+    for func in self._callback_dict[SimulationEngine.START_CALLBACK]: func()
   
   def _notify_stop(self):
     '''
     Notifies of stop of the simulation 
     '''
-    for func in self._callback_dict[self.STOP_CALLBACK]: func()
+    for func in self._callback_dict[SimulationEngine.STOP_CALLBACK]: func()
   
   def _notify_event(self, event):
     '''
     Notifies of an imminent event 
     '''
-    for func in self._callback_dict[self.EVENT_CALLBACK]: func(event)
+    for func in self._callback_dict[SimulationEngine.EVENT_CALLBACK]: func(event)
   
 
 class SimulationEngineTests(unittest.TestCase):
@@ -149,19 +149,19 @@ class SimulationEngineTests(unittest.TestCase):
   
   def test_notify_start(self):
     def f(): print("Callback received")
-    self.sim.register_callback(f, self.sim.START_CALLBACK)
+    self.sim.register_callback(f, SimulationEngine.START_CALLBACK)
     self.sim.stop(1)
     self.sim.start()
   
   def test_notify_stop(self):
     def f(): print("Callback received")
-    self.sim.register_callback(f, self.sim.STOP_CALLBACK)
+    self.sim.register_callback(f, SimulationEngine.STOP_CALLBACK)
     self.sim.stop(1)
     self.sim.start()
   
   def test_notify_event(self):
     def f(e): print("Callback received. Event: {}@{}".format(e.identifier, e.time))
-    self.sim.register_callback(f, self.sim.EVENT_CALLBACK)
+    self.sim.register_callback(f, SimulationEngine.EVENT_CALLBACK)
     self.sim.stop(2)
     self.sim.schedule(Event("Dummy", 1))
     self.sim.start()

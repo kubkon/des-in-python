@@ -101,14 +101,14 @@ class MM1EventHandler(EventHandler):
     # Print the imminent event
     # print("{}: {}".format(event.time, event.identifier))
     # Check event's identifier
-    if event.identifier == self.ARRIVAL_EVENT:
+    if event.identifier == MM1EventHandler.ARRIVAL_EVENT:
       # Increment the queue length
       self._queue_length += 1
       # Record event's arrival time (stats)
       self._arrivals += [event.time]
       # Schedule next arrival event
       self._schedule_arrival_event(event.time)
-    if event.identifier == self.DEPARTURE_EVENT:
+    if event.identifier == MM1EventHandler.DEPARTURE_EVENT:
       # Decrement the queue length
       self._queue_length -= 1
       # Record event's departure time (stats)
@@ -127,7 +127,7 @@ class MM1EventHandler(EventHandler):
     # Calculate interarrival time
     delta_time = random.expovariate(self._interarrival_rate)
     # Create next arrival event
-    event = Event(self.ARRIVAL_EVENT, base_time + delta_time)
+    event = Event(MM1EventHandler.ARRIVAL_EVENT, base_time + delta_time)
     # Schedule the event
     self._simulation_engine.schedule(event)
   
@@ -138,7 +138,7 @@ class MM1EventHandler(EventHandler):
     # Calculate service time
     delta_time = random.expovariate(self._service_rate)
     # Create next departure event
-    event = Event(self.DEPARTURE_EVENT, base_time + delta_time)
+    event = Event(MM1EventHandler.DEPARTURE_EVENT, base_time + delta_time)
     # Schedule the event
     self._simulation_engine.schedule(event)
     # Set is processing flag to True

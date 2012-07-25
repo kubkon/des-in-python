@@ -36,11 +36,11 @@ class EventHandler(object):
     self._simulation_engine = simulation_engine
     # Register callback functions:
     # start of the simulation
-    self._simulation_engine.register_callback(self._handle_start, self._simulation_engine.START_CALLBACK)
+    self._simulation_engine.register_callback(self._handle_start, SimulationEngine.START_CALLBACK)
     # stop of the simulation
-    self._simulation_engine.register_callback(self._handle_stop, self._simulation_engine.STOP_CALLBACK)
+    self._simulation_engine.register_callback(self._handle_stop, SimulationEngine.STOP_CALLBACK)
     # imminent event
-    self._simulation_engine.register_callback(self._handle_event, self._simulation_engine.EVENT_CALLBACK)
+    self._simulation_engine.register_callback(self._handle_event, SimulationEngine.EVENT_CALLBACK)
   
   def _handle_start(self):
     '''
