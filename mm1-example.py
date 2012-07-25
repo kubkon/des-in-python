@@ -41,8 +41,6 @@ def main():
   event_handler = MM1EventHandler(sim)
   event_handler.interarrival_rate = interarrival_rate
   event_handler.service_rate = service_rate
-  # Register event handler with the simulation engine
-  sim.event_handler = event_handler
   
   ### Simulate
   # Schedule finishing event; simulate for 24h
