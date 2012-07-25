@@ -145,7 +145,26 @@ class SimulationEngine(object):
 
 class SimulationEngineTests(unittest.TestCase):
   def setUp(self):
-    pass
+    self.sim = SimulationEngine()
+  
+  def test_notify_start(self):
+    def f(): print("Callback received")
+    self.sim.register_callback(f, self.sim.START_CALLBACK)
+    self.sim.stop(1)
+    self.sim.start()
+  
+  def test_notify_stop(self):
+    def f(): print("Callback received")
+    self.sim.register_callback(f, self.sim.STOP_CALLBACK)
+    self.sim.stop(1)
+    self.sim.start()
+  
+  def test_notify_event(self):
+    def f(e): print("Callback received. Event: {}@{}".format(e.identifier, e.time))
+    self.sim.register_callback(f, self.sim.EVENT_CALLBACK)
+    self.sim.stop(2)
+    self.sim.schedule(Event("Dummy", 1))
+    self.sim.start()
   
 
 if __name__ == '__main__':
