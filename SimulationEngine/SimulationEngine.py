@@ -23,7 +23,7 @@ import os
 import unittest
 import random
 
-from Event import *
+from .Event import *
 
 
 class SimulationEngine(object):

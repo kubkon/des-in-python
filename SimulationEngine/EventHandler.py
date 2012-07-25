@@ -21,7 +21,7 @@ http://www.gnu.org/licenses/gpl-3.0.html
 import sys
 import os
 
-from SimulationEngine import *
+from .SimulationEngine import *
 
 
 class EventHandler(object):

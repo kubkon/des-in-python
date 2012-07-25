@@ -23,9 +23,9 @@ import os
 import unittest
 import random
 
-from EventHandler import *
-from Event import *
-from SimulationEngine import *
+from SimulationEngine.EventHandler import *
+from SimulationEngine.Event import *
+from SimulationEngine.SimulationEngine import *
 
 
 class MM1EventHandler(EventHandler):
