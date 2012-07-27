@@ -169,8 +169,8 @@ class MM1EventHandlerTests(unittest.TestCase):
   def test_properties(self):
     self.eh.interarrival_rate = 0.05
     self.eh.service_rate = 0.1
-    self.assertEquals(self.eh.interarrival_rate, 0.05)
-    self.assertEquals(self.eh.service_rate, 0.1)
+    self.assertEqual(self.eh.interarrival_rate, 0.05)
+    self.assertEqual(self.eh.service_rate, 0.1)
 
 if __name__ == '__main__':
   unittest.main()
