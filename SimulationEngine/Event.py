@@ -27,16 +27,18 @@ class Event(object):
   '''
   Represents an abstract event
   '''
-  def __init__(self, identifier, time):
+  def __init__(self, identifier, time, **kwargs):
     '''
     Constructs Event instance
     
     Keyword arguments:
     identifier -- ID/type of this event
     time -- Time of occurring of this event
+    kwargs -- Optional arguments
     '''
     self._identifier = identifier
     self._time = time
+    self._kwargs = kwargs
   
   @property
   def identifier(self):
@@ -52,14 +54,24 @@ class Event(object):
     '''
     return self._time
   
+  @property
+  def kwargs(self):
+    '''
+    Returns dictionary of optional arguments
+    '''
+    return self._kwargs
 
 class EventTests(unittest.TestCase):
   def setUp(self):
-    self.e = Event("Arrival", 10)
+    self.e1 = Event("Arrival", 10)
+    self.e2 = Event("Arrival", 10, special="Special")
   
   def test_properties(self):
-    self.assertEquals(self.e.identifier, "Arrival")
-    self.assertEquals(self.e.time, 10)
+    self.assertEqual(self.e1.identifier, "Arrival")
+    self.assertEqual(self.e1.time, 10)
+    self.assertEqual(self.e2.identifier, "Arrival")
+    self.assertEqual(self.e2.time, 10)
+    self.assertEqual(self.e2.kwargs.get('special', None), "Special")
   
 
 if __name__ == '__main__':
