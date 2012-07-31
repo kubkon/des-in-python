@@ -39,8 +39,11 @@ class MM1EventHandler(EventHandler):
   def __init__(self, simulation_engine):
     '''
     Constructs MM1EventHandler object
+    
+    Keyword arguments:
+    simulation_engine -- Instance of SimulationEngine class
     '''
-    super(MM1EventHandler, self).__init__(simulation_engine)
+    super().__init__(simulation_engine)
     # Initialize mean interarrival time
     self._interarrival_rate = 0
     # Initialize mean service time
@@ -65,6 +68,9 @@ class MM1EventHandler(EventHandler):
   def interarrival_rate(self, interarrival_rate):
     '''
     Sets mean interarrival rate
+    
+    Keyword arguments:
+    interarrival_rate -- Interarrival rate to be set
     '''
     self._interarrival_rate = interarrival_rate
   
@@ -79,6 +85,9 @@ class MM1EventHandler(EventHandler):
   def service_rate(self, service_rate):
     '''
     Sets mean service rate
+    
+    Keyword arguments:
+    service_rate -- Service rate to be set
     '''
     self._service_rate = service_rate
   
@@ -98,8 +107,6 @@ class MM1EventHandler(EventHandler):
     '''
     Overriden method
     '''
-    # Print the imminent event
-    # print("{}: {}".format(event.time, event.identifier))
     # Check event's identifier
     if event.identifier == MM1EventHandler.ARRIVAL_EVENT:
       # Increment the queue length
@@ -123,6 +130,9 @@ class MM1EventHandler(EventHandler):
   def _schedule_arrival_event(self, base_time):
     '''
     Schedules next arrival event
+    
+    Keyword arguments:
+    base_time -- Current simulation time
     '''
     # Calculate interarrival time
     delta_time = random.expovariate(self._interarrival_rate)
@@ -134,6 +144,9 @@ class MM1EventHandler(EventHandler):
   def _schedule_departure_event(self, base_time):
     '''
     Schedules next departure event
+    
+    Keyword arguments:
+    base_time -- Current simulation time
     '''
     # Calculate service time
     delta_time = random.expovariate(self._service_rate)

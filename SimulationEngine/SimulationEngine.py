@@ -63,6 +63,9 @@ class SimulationEngine(object):
   def simulation_time(self, simulation_time):
     '''
     Sets current simulation time
+    
+    Keyword arguments:
+    simulation_time -- Simulation time to be set
     '''
     self._simulation_time = simulation_time
   
@@ -138,7 +141,10 @@ class SimulationEngine(object):
   
   def _notify_event(self, event):
     '''
-    Notifies of an imminent event 
+    Notifies of an imminent event
+    
+    Keyword arguments:
+    event -- The imminent event 
     '''
     for func in self._callback_dict[SimulationEngine.EVENT_CALLBACK]: func(event)
   

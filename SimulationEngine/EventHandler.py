@@ -31,6 +31,9 @@ class EventHandler(object):
   def __init__(self, simulation_engine):
     '''
     Constructs EventHandler object
+    
+    Keyword arguments:
+    simulation_engine -- Instance of SimulationEngine class
     '''
     # Assign simulation engine object
     self._simulation_engine = simulation_engine
