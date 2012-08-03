@@ -21,10 +21,11 @@ http://www.gnu.org/licenses/gpl-3.0.html
 import sys
 import os
 
+from abc import ABCMeta, abstractmethod
 from .SimulationEngine import *
 
 
-class EventHandler(object):
+class EventHandler(metaclass=ABCMeta):
   '''
   Abstract base class for event handlers
   '''
@@ -45,18 +46,21 @@ class EventHandler(object):
     # imminent event
     self._simulation_engine.register_callback(self._handle_event, SimulationEngine.EVENT_CALLBACK)
   
+  @abstractmethod
   def _handle_start(self):
     '''
     Abstract method for handling start of the simulation
     '''
-    raise NotImplementedError("Method not implemented")
+    pass
   
+  @abstractmethod
   def _handle_stop(self):
     '''
     Abstract method for handling stop of the simulation
     '''
-    raise NotImplementedError("Method not implemented")
-    
+    pass
+  
+  @abstractmethod
   def _handle_event(self, event):
     '''
     Abstract method for handling imminent events
@@ -64,5 +68,5 @@ class EventHandler(object):
     Keyword arguments:
     event -- Event to be handled
     '''
-    raise NotImplementedError("Method not implemented")
+    pass
   
