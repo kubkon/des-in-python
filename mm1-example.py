@@ -21,7 +21,7 @@ http://www.gnu.org/licenses/gpl-3.0.html
 import sys
 import os
 
-from SimulationEngine.SimulationEngine import *
+from SimulationEngine.SimulationEngineFactory import *
 from MM1EventHandler import *
 
 
@@ -36,11 +36,11 @@ def main():
   
   ### Initialize
   # Create new simulation engine
-  sim = SimulationEngine()
-  # Seed PRNG
+  sim = SimulationEngineFactory.get_instance()
+  # Seed default PRNG
   sim.prng.seed = 100
   # Create MM1 specific event handler
-  event_handler = MM1EventHandler(sim)
+  event_handler = MM1EventHandler()
   event_handler.interarrival_rate = interarrival_rate
   event_handler.service_rate = service_rate
   

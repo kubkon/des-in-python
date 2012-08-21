@@ -22,22 +22,19 @@ import sys
 import os
 
 from abc import ABCMeta, abstractmethod
-from .SimulationEngine import *
+from .SimulationEngineFactory import *
 
 
 class EventHandler(metaclass=ABCMeta):
   '''
   Abstract base class for event handlers
   '''
-  def __init__(self, simulation_engine):
+  def __init__(self):
     '''
     Constructs EventHandler object
-    
-    Keyword arguments:
-    simulation_engine -- Instance of SimulationEngine class
     '''
-    # Assign simulation engine object
-    self._simulation_engine = simulation_engine
+    # Get instance of SimulationEngine object
+    self._simulation_engine = SimulationEngineFactory.get_instance()
     # Register callback functions:
     # start of the simulation
     self._simulation_engine.register_callback(self._handle_start, SimulationEngine.START_CALLBACK)

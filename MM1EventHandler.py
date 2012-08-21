@@ -35,14 +35,11 @@ class MM1EventHandler(EventHandler):
   ARRIVAL_EVENT = "Arrival"
   DEPARTURE_EVENT = "Departure"
   
-  def __init__(self, simulation_engine):
+  def __init__(self):
     '''
     Constructs MM1EventHandler object
-    
-    Keyword arguments:
-    simulation_engine -- Instance of SimulationEngine class
     '''
-    super().__init__(simulation_engine)
+    super().__init__()
     # Initialize mean interarrival time
     self._interarrival_rate = 0
     # Initialize mean service time
