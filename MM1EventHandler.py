@@ -21,7 +21,6 @@ http://www.gnu.org/licenses/gpl-3.0.html
 import sys
 import os
 import unittest
-import random
 
 from SimulationEngine.EventHandler import *
 from SimulationEngine.Event import *
@@ -135,7 +134,7 @@ class MM1EventHandler(EventHandler):
     base_time -- Current simulation time
     '''
     # Calculate interarrival time
-    delta_time = random.expovariate(self._interarrival_rate)
+    delta_time = self._simulation_engine.prng.expovariate(self._interarrival_rate)
     # Create next arrival event
     event = Event(MM1EventHandler.ARRIVAL_EVENT, base_time + delta_time)
     # Schedule the event
@@ -149,7 +148,7 @@ class MM1EventHandler(EventHandler):
     base_time -- Current simulation time
     '''
     # Calculate service time
-    delta_time = random.expovariate(self._service_rate)
+    delta_time = self._simulation_engine.prng.expovariate(self._service_rate)
     # Create next departure event
     event = Event(MM1EventHandler.DEPARTURE_EVENT, base_time + delta_time)
     # Schedule the event

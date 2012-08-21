@@ -37,6 +37,8 @@ def main():
   ### Initialize
   # Create new simulation engine
   sim = SimulationEngine()
+  # Seed PRNG
+  sim.prng.seed = 100
   # Create MM1 specific event handler
   event_handler = MM1EventHandler(sim)
   event_handler.interarrival_rate = interarrival_rate

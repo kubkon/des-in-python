@@ -18,12 +18,15 @@ along with this library; if not, visit
 http://www.gnu.org/licenses/gpl-3.0.html
 """
 
+import datetime
+import time
 import sys
 import os
 import unittest
 import random
 
 from .Event import *
+from .PRNG import *
 
 
 class SimulationEngine(object):
@@ -51,6 +54,8 @@ class SimulationEngine(object):
     self._finish_event_exists = False
     # Initialize callback dictionary
     self._callback_dict = {SimulationEngine.START_CALLBACK: [], SimulationEngine.STOP_CALLBACK: [], SimulationEngine.EVENT_CALLBACK: []}
+    # Initialize default PRNG
+    self._prng = PRNG()
   
   @property
   def simulation_time(self):
@@ -68,6 +73,20 @@ class SimulationEngine(object):
     simulation_time -- Simulation time to be set
     '''
     self._simulation_time = simulation_time
+  
+  @property
+  def prng(self):
+    '''
+    Returns used PRNG
+    '''
+    return self._prng
+  
+  @prng.setter
+  def prng(self, prng):
+    '''
+    Sets PRNG to be used by the simulation engine
+    '''
+    self._prng = prng
   
   def start(self):
     '''
