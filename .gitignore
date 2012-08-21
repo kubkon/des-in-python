@@ -1,4 +1,4 @@
-/*
-!/SimulationEngine/*.py
-!.py
-!.md
+*
+!*.py
+!*.md
+!*/
