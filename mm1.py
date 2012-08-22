@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-MM1EventHandler.py
+mm1.py
 
-Created by Jakub Konka on 2012-07-23.
+Created by Jakub Konka on 2012-08-22.
 Copyright (c) 2012 Jakub Konka.
 
 This library is free software; you can redistribute it and/or
@@ -18,16 +18,11 @@ along with this library; if not, visit
 http://www.gnu.org/licenses/gpl-3.0.html
 """
 
-import sys
-import os
 import unittest
-
-from SimulationEngine.EventHandler import *
-from SimulationEngine.Event import *
-from SimulationEngine.SimulationEngine import *
+import sim
 
 
-class MM1EventHandler(EventHandler):
+class MM1EventHandler(sim.EventHandler):
   '''
   MM1 queue specific event handler
   '''
@@ -133,7 +128,7 @@ class MM1EventHandler(EventHandler):
     # Calculate interarrival time
     delta_time = self._simulation_engine.prng.expovariate(self._interarrival_rate)
     # Create next arrival event
-    event = Event(MM1EventHandler.ARRIVAL_EVENT, base_time + delta_time)
+    event = sim.Event(MM1EventHandler.ARRIVAL_EVENT, base_time + delta_time)
     # Schedule the event
     self._simulation_engine.schedule(event)
   
@@ -147,7 +142,7 @@ class MM1EventHandler(EventHandler):
     # Calculate service time
     delta_time = self._simulation_engine.prng.expovariate(self._service_rate)
     # Create next departure event
-    event = Event(MM1EventHandler.DEPARTURE_EVENT, base_time + delta_time)
+    event = sim.Event(MM1EventHandler.DEPARTURE_EVENT, base_time + delta_time)
     # Schedule the event
     self._simulation_engine.schedule(event)
     # Set is processing flag to True
@@ -173,7 +168,7 @@ class MM1EventHandler(EventHandler):
 
 class MM1EventHandlerTests(unittest.TestCase):
   def setUp(self):
-    self.eh = MM1EventHandler(SimulationEngine())
+    self.eh = MM1EventHandler()
     
   def test_properties(self):
     self.eh.interarrival_rate = 0.05

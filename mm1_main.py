@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-mm1-example.py
+mm1_main.py
 
-Created by Jakub Konka on 2012-07-23.
+Created by Jakub Konka on 2012-08-22.
 Copyright (c) 2012 Jakub Konka.
 
 This library is free software; you can redistribute it and/or
@@ -18,11 +18,8 @@ along with this library; if not, visit
 http://www.gnu.org/licenses/gpl-3.0.html
 """
 
-import sys
-import os
-
-from SimulationEngine.SimulationEngineFactory import *
-from MM1EventHandler import *
+import mm1
+import sim
 
 
 def main():
@@ -36,19 +33,19 @@ def main():
   
   ### Initialize
   # Create new simulation engine
-  sim = SimulationEngineFactory.get_instance()
+  se = sim.SimulationEngineFactory.get_instance()
   # Seed default PRNG
-  sim.prng.seed = 100
+  se.prng.seed = 100
   # Create MM1 specific event handler
-  event_handler = MM1EventHandler()
+  event_handler = mm1.MM1EventHandler()
   event_handler.interarrival_rate = interarrival_rate
   event_handler.service_rate = service_rate
   
   ### Simulate
   # Schedule finishing event; simulate for 24h
-  sim.stop(60*60*24)
+  se.stop(60*60*24)
   # Start simulating
-  sim.start()
+  se.start()
 
 
 if __name__ == '__main__':
