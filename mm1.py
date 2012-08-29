@@ -6,17 +6,17 @@ import sim
 
 
 class MM1EventHandler(sim.EventHandler):
-  '''
+  """
   MM1 queue specific event handler
-  '''
+  """
   # IDs of the handled events
   ARRIVAL_EVENT = "Arrival"
   DEPARTURE_EVENT = "Departure"
   
   def __init__(self):
-    '''
+    """
     Constructs MM1EventHandler object
-    '''
+    """
     super().__init__()
     # Initialize mean interarrival time
     self._interarrival_rate = 0
@@ -33,54 +33,54 @@ class MM1EventHandler(sim.EventHandler):
   
   @property
   def interarrival_rate(self):
-    '''
+    """
     Returns mean interarrival rate
-    '''
+    """
     return self._interarrival_rate
   
   @interarrival_rate.setter
   def interarrival_rate(self, interarrival_rate):
-    '''
+    """
     Sets mean interarrival rate
     
     Keyword arguments:
     interarrival_rate -- Interarrival rate to be set
-    '''
+    """
     self._interarrival_rate = interarrival_rate
   
   @property
   def service_rate(self):
-    '''
+    """
     Returns mean service rate
-    '''
+    """
     return self._service_rate
   
   @service_rate.setter
   def service_rate(self, service_rate):
-    '''
+    """
     Sets mean service rate
     
     Keyword arguments:
     service_rate -- Service rate to be set
-    '''
+    """
     self._service_rate = service_rate
   
   def _handle_start(self):
-    '''
+    """
     Overriden method
-    '''
+    """
     self._schedule_arrival_event(self._simulation_engine.simulation_time)
   
   def _handle_stop(self):
-    '''
+    """
     Overriden method
-    '''
+    """
     self._print_statistics()
   
   def _handle_event(self, event):
-    '''
+    """
     Overriden method
-    '''
+    """
     # Check event's identifier
     if event.identifier == MM1EventHandler.ARRIVAL_EVENT:
       # Increment the queue length
@@ -102,12 +102,12 @@ class MM1EventHandler(sim.EventHandler):
       self._schedule_departure_event(event.time)
   
   def _schedule_arrival_event(self, base_time):
-    '''
+    """
     Schedules next arrival event
     
     Keyword arguments:
     base_time -- Current simulation time
-    '''
+    """
     # Calculate interarrival time
     delta_time = self._simulation_engine.prng.expovariate(self._interarrival_rate)
     # Create next arrival event
@@ -116,12 +116,12 @@ class MM1EventHandler(sim.EventHandler):
     self._simulation_engine.schedule(event)
   
   def _schedule_departure_event(self, base_time):
-    '''
+    """
     Schedules next departure event
     
     Keyword arguments:
     base_time -- Current simulation time
-    '''
+    """
     # Calculate service time
     delta_time = self._simulation_engine.prng.expovariate(self._service_rate)
     # Create next departure event
@@ -132,9 +132,9 @@ class MM1EventHandler(sim.EventHandler):
     self._is_processing = True
   
   def _print_statistics(self):
-    '''
+    """
     Prints some statistics when simulation ends
-    '''
+    """
     # Calculate mean waiting time in the queue
     arrivals_len = len(self._arrivals)
     departures_len = len(self._departures)

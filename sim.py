@@ -10,10 +10,10 @@ import unittest
 
 
 class _SimulationEngine(object):
-  '''
+  """
   Represents the main engine of a DES simulation platform;
   should not be instantiated directly
-  '''
+  """
   # ID of the finishing event
   END_EVENT = "End"
   # Callback types
@@ -22,9 +22,9 @@ class _SimulationEngine(object):
   EVENT_CALLBACK = "event"
   
   def __init__(self):
-    '''
+    """
     Constructs SimulationEngine instance
-    '''
+    """
     # Create empty event list
     self._event_list = []
     # Initialize current simulation time
@@ -40,39 +40,39 @@ class _SimulationEngine(object):
   
   @property
   def simulation_time(self):
-    '''
+    """
     Returns current simulation time
-    '''
+    """
     return self._simulation_time
   
   @simulation_time.setter
   def simulation_time(self, simulation_time):
-    '''
+    """
     Sets current simulation time
     
     Keyword arguments:
     simulation_time -- Simulation time to be set
-    '''
+    """
     self._simulation_time = simulation_time
   
   @property
   def prng(self):
-    '''
+    """
     Returns used PRNG
-    '''
+    """
     return self._prng
   
   @prng.setter
   def prng(self, prng):
-    '''
+    """
     Sets PRNG to be used by the simulation engine
-    '''
+    """
     self._prng = prng
   
   def start(self):
-    '''
+    """
     Starts simulation
-    '''
+    """
     # Notify of the start of simulation; event handlers should
     # generate first event
     self._notify_start()
@@ -88,12 +88,12 @@ class _SimulationEngine(object):
     self._notify_stop()
   
   def stop(self, finish_time):
-    '''
+    """
     Schedules finishing event
     
     Keyword arguments:
     finish_time -- Time of occurrence of the finishing event
-    '''
+    """
     # Check if finishing event already scheduled
     if not self._finish_event_exists:
       # Set finish time
@@ -103,12 +103,12 @@ class _SimulationEngine(object):
       self._finish_event_exists = True
   
   def schedule(self, event):
-    '''
+    """
     Schedules event (adds it to the event list)
     
     Keyword arguments:
     event -- Event to be scheduled
-    '''
+    """
     # Discard new event if happens after the finishing event
     if event.time < self._finish_time:
       # Add the event to the event list
@@ -118,102 +118,102 @@ class _SimulationEngine(object):
       self._event_list.reverse()
   
   def register_callback(self, func, ttype):
-    '''
+    """
     Register function for callback when simulation ends
     
     Keyword arguments:
     func -- Function to call back
     ttype -- Type of the callback
-    '''
+    """
     self._callback_dict[ttype] += [func]
   
   def _notify_start(self):
-    '''
+    """
     Notifies of start of the simulation
-    '''
+    """
     for func in self._callback_dict[_SimulationEngine.START_CALLBACK]: func()
   
   def _notify_stop(self):
-    '''
-    Notifies of stop of the simulation 
-    '''
+    """
+    Notifies of stop of the simulation
+    """
     for func in self._callback_dict[_SimulationEngine.STOP_CALLBACK]: func()
   
   def _notify_event(self, event):
-    '''
+    """
     Notifies of an imminent event
     
     Keyword arguments:
     event -- The imminent event 
-    '''
+    """
     for func in self._callback_dict[_SimulationEngine.EVENT_CALLBACK]: func(event)
   
 
 class SimulationEngineFactory(object):
-  '''
+  """
   Factory class for creating SimulationEngine objects;
   mimicks singleton design pattern
-  '''
+  """
   # Stored instance of SimulationEngine class
   _INSTANCE = None
   
   @classmethod
   def get_instance(cls):
-    '''
+    """
     Returns an instance of SimulationEngine object
-    '''
+    """
     if SimulationEngineFactory._INSTANCE is None:
       SimulationEngineFactory._INSTANCE = _SimulationEngine()
     return SimulationEngineFactory._INSTANCE
   
 
 class Event(object):
-  '''
+  """
   Represents an abstract event
-  '''
+  """
   def __init__(self, identifier, time, **kwargs):
-    '''
+    """
     Constructs Event instance
     
     Keyword arguments:
     identifier -- ID/type of this event
     time -- Time of occurring of this event
     kwargs -- Optional arguments
-    '''
+    """
     self._identifier = identifier
     self._time = time
     self._kwargs = kwargs
   
   @property
   def identifier(self):
-    '''
+    """
     Returns id of this event
-    '''
+    """
     return self._identifier
   
   @property
   def time(self):
-    '''
+    """
     Returns time of occurring
-    '''
+    """
     return self._time
   
   @property
   def kwargs(self):
-    '''
+    """
     Returns dictionary of optional arguments
-    '''
+    """
     return self._kwargs
   
 
 class EventHandler(metaclass=ABCMeta):
-  '''
+  """
   Abstract base class for event handlers
-  '''
+  """
   def __init__(self):
-    '''
+    """
     Constructs EventHandler object
-    '''
+    """
     # Get instance of SimulationEngine object
     self._simulation_engine = SimulationEngineFactory.get_instance()
     # Register callback functions:
@@ -226,38 +226,37 @@ class EventHandler(metaclass=ABCMeta):
   
   @abstractmethod
   def _handle_start(self):
-    '''
+    """
     Abstract method for handling start of the simulation
-    '''
+    """
     pass
   
   @abstractmethod
   def _handle_stop(self):
-    '''
+    """
     Abstract method for handling stop of the simulation
-    '''
+    """
     pass
   
   @abstractmethod
   def _handle_event(self, event):
-    '''
+    """
     Abstract method for handling imminent events
     
     Keyword arguments:
     event -- Event to be handled
-    '''
+    """
     pass
   
 
 class PRNG(object):
-  '''
+  """
   Represents default PRNG (currently, wrapper class for random module)
-  '''
-  
+  """
   def __init__(self):
-    '''
+    """
     Constructs PRNG instance
-    '''
+    """
     # Default seed value to current datetime
     self._seed = int(time.mktime(datetime.datetime.now().timetuple()))
     # Initialize PRNG with the default seed value
@@ -265,52 +264,52 @@ class PRNG(object):
   
   @property
   def seed(self):
-    '''
+    """
     Returns current seed value
-    '''
+    """
     return self._seed
   
   @seed.setter
   def seed(self, seed):
-    '''
+    """
     Sets new seed value
     
     Keyword arguments:
     seed -- New seed value
-    '''
+    """
     self._seed = seed
     # Re-initialize PRNG with new seed value
     random.seed(self._seed)
   
   def randint(self, a, b):
-    '''
+    """
     Returns a random integer N such that a <= N <= b
     
     Keyword arguments:
     a -- Lower bound
     b -- Upper bound
-    '''
+    """
     return random.randint(a, b)
   
   def uniform(self, a, b):
-    '''
+    """
     Returns a random floating point number N such that
     a <= N <= b for a <= b and b <= N <= a for b < a
     
     Keyword arguments:
     a -- Lower bound
     b -- Upper bound
-    '''
+    """
     return random.uniform(a, b)
   
   def expovariate(self, lambd):
-    '''
+    """
     Returns a random floating point number N drawn
     from an exponential distribution with parameter lambd (1 / E[X])
     
     Keyword arguments:
     lambd -- Lambda parameter of exponential distribution (1 / E[X])
-    '''
+    """
     return random.expovariate(lambd)
   
 
