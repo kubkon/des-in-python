@@ -16,7 +16,7 @@ def main():
   
   ### Initialize
   # Create new simulation engine
-  se = sim.SimulationEngineFactory.get_instance()
+  se = sim.SimulationEngine()
   # Seed default PRNG
   se.prng.seed = 100
   # Create MM1 specific event handler
