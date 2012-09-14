@@ -253,7 +253,7 @@ class SimulationEngine(metaclass=Singleton):
       # Set finish time
       self._finish_time = finish_time
       # Schedule finishing event
-      self._event_list += [Event(SimulationEngine.END_EVENT, self._finish_time)]
+      self._event_list += [Event(self.END_EVENT, self._finish_time)]
       self._finish_event_exists = True
   
   def schedule(self, event):
@@ -285,13 +285,13 @@ class SimulationEngine(metaclass=Singleton):
     """
     Notifies of start of the simulation
     """
-    for func in self._callback_dict[SimulationEngine.START_CALLBACK]: func()
+    for func in self._callback_dict[self.START_CALLBACK]: func()
   
   def _notify_stop(self):
     """
     Notifies of stop of the simulation
     """
-    for func in self._callback_dict[SimulationEngine.STOP_CALLBACK]: func()
+    for func in self._callback_dict[self.STOP_CALLBACK]: func()
   
   def _notify_event(self, event):
     """
@@ -300,7 +300,7 @@ class SimulationEngine(metaclass=Singleton):
     Keyword arguments:
     event -- The imminent event 
     """
-    for func in self._callback_dict[SimulationEngine.EVENT_CALLBACK]: func(event)
+    for func in self._callback_dict[self.EVENT_CALLBACK]: func(event)
   
 
 class SimulationEngineTests(unittest.TestCase):
