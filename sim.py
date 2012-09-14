@@ -303,7 +303,7 @@ class SimulationEngine(metaclass=Singleton):
     for func in self._callback_dict[SimulationEngine.EVENT_CALLBACK]: func(event)
   
 
-class SimulationEngineFactoryTests(unittest.TestCase):
+class SimulationEngineTests(unittest.TestCase):
   def setUp(self):
     self.sim = SimulationEngine()
   
