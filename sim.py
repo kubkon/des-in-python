@@ -165,8 +165,7 @@ class EventHandler(metaclass=ABCMeta):
 
 class SimulationEngine(metaclass=Singleton):
   """
-  Represents the main engine of a DES simulation platform;
-  should not be instantiated directly
+  Represents the main engine of a DES simulation platform
   """
   # ID of the finishing event
   END_EVENT = "End"
