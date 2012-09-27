@@ -10,6 +10,9 @@ import unittest
 
 
 class Singleton(type):
+  """
+  Metaclass for constructing singleton classes
+  """
   def __init__(self, name, bases, namespace):
     self._obj = type(name, bases, namespace)()
   
