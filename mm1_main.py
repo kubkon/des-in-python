@@ -11,19 +11,17 @@ import time
 parser = argparse.ArgumentParser(description="M/M/1 queue simulation -- Main script")
 parser.add_argument('sim_duration', metavar='simulation_duration',
                     type=int, help='simulation duration in seconds')
+parser.add_argument('int_rate', metavar='interarrival_rate',
+                    type=int, help='mean packet interarrival rate in seconds')
+parser.add_argument('sr_rate', metavar='service_rate',
+                    type=int, help='mean packet service rate in seconds')
 parser.add_argument('--seed', dest='seed', default=int(round(time.time())),
                     type=int, help='seed for the PRNG (default: current system timestamp)')
 args = parser.parse_args()
 sim_duration = args.sim_duration
+interarrival_rate = args.int_rate
+service_rate = args.sr_rate
 seed = args.seed
-
-### Params
-# Mean interarrival rate of customers per second;
-# hence, 0.05 <=> 3 people/minute
-interarrival_rate = 0.05
-# Mean service rate by the teller per second;
-# hence, 0.1 <=> 6 people/minute
-service_rate = 0.1
   
 ### Initialize
 # Create new simulation engine
