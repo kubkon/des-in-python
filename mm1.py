@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import unittest
+import csv
+import os.path
 import sim
+import unittest
 
 
 class MM1EventHandler(sim.EventHandler):
@@ -75,7 +77,7 @@ class MM1EventHandler(sim.EventHandler):
     """
     Overriden method
     """
-    self._print_statistics()
+    self._save_statistics()
   
   def _handle_event(self, event):
     """
@@ -131,11 +133,11 @@ class MM1EventHandler(sim.EventHandler):
     # Set is processing flag to True
     self._is_processing = True
   
-  def _print_statistics(self):
+  def _save_statistics(self):
     """
-    Prints some statistics when simulation ends
+    Save statistics when simulation ends
     """
-    # Calculate mean waiting time in the queue
+    # Calculate mean delay
     arrivals_len = len(self._arrivals)
     departures_len = len(self._departures)
     if arrivals_len == 0 or departures_len == 0:
@@ -145,8 +147,12 @@ class MM1EventHandler(sim.EventHandler):
         self._arrivals = self._arrivals[:departures_len]
       else:
         self._departures = self._departures[:arrivals_len]
-      waiting_times = list(map(lambda x,y: x-y, self._departures, self._arrivals))
-      print("Mean waiting time: {}".format(sum(waiting_times) / len(waiting_times)))
+      delays = list(map(lambda x,y: x-y, self._departures, self._arrivals))
+      mean_delay = sum(delays) / len(delays)
+      # Save to a file
+      with open("mean_delay.out", mode='a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f, delimiter=',')
+        writer.writerow([mean_delay])
   
 
 class MM1EventHandlerTests(unittest.TestCase):
