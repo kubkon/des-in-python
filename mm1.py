@@ -150,7 +150,9 @@ class MM1EventHandler(sim.EventHandler):
       delays = list(map(lambda x,y: x-y, self._departures, self._arrivals))
       mean_delay = sum(delays) / len(delays)
       # Save to a file
-      with open("mean_delay.out", mode='a', newline='', encoding='utf-8') as f:
+      fname = "mean_delay_{}_{}.out".format(self._interarrival_rate,
+                                            self._service_rate)
+      with open(fname, mode='a', newline='', encoding='utf-8') as f:
         writer = csv.writer(f, delimiter=',')
         writer.writerow([mean_delay])
   
