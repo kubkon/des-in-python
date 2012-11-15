@@ -3,8 +3,8 @@
 
 import argparse
 import numpy as np
-import mm1
-import sim
+import des.mm1 as mm1
+import des.sim as sim
 import time
 
 

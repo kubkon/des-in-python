@@ -3,7 +3,7 @@
 
 import csv
 import os.path
-import sim
+import des.sim as sim
 import unittest
 
 
