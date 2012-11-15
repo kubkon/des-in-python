@@ -111,7 +111,7 @@ class MM1EventHandler(sim.EventHandler):
     base_time -- Current simulation time
     """
     # Calculate interarrival time
-    delta_time = self._simulation_engine.prng.expovariate(self._interarrival_rate)
+    delta_time = self._simulation_engine.prng.exponential(1/self._interarrival_rate)
     # Create next arrival event
     event = sim.Event(MM1EventHandler.ARRIVAL_EVENT, base_time + delta_time)
     # Schedule the event
@@ -125,7 +125,7 @@ class MM1EventHandler(sim.EventHandler):
     base_time -- Current simulation time
     """
     # Calculate service time
-    delta_time = self._simulation_engine.prng.expovariate(self._service_rate)
+    delta_time = self._simulation_engine.prng.exponential(1/self._service_rate)
     # Create next departure event
     event = sim.Event(MM1EventHandler.DEPARTURE_EVENT, base_time + delta_time)
     # Schedule the event

@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import argparse
+import numpy as np
 import mm1
 import sim
 import time
@@ -26,8 +27,8 @@ seed = args.seed
 ### Initialize
 # Create new simulation engine
 se = sim.SimulationEngine()
-# Seed default PRNG
-se.prng.seed = seed
+# Seed NumPy PRNG
+se.prng = np.random.RandomState(seed)
 # Create MM1 specific event handler
 event_handler = mm1.MM1EventHandler()
 event_handler.interarrival_rate = interarrival_rate
