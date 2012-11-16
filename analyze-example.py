@@ -59,7 +59,7 @@ if mode == 'steady-state':
   # Compute confidence intervals for the mean
   ci = se * stats.t.ppf(0.5 + confidence/2, len(averages)-1)
   # Save to a file
-  fn = input_dir + '/' + mode
+  fn = input_dir + '/' + mode + '_{}'.format(warmup)
   with open(fn, 'w', newline='', encoding='utf-8') as f:
     writer = csv.writer(f, delimiter=',')
     writer.writerow(['mean', 'sd', 'se', 'ci'])
