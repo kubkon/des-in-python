@@ -34,8 +34,8 @@ extension = ".out"
 file_names = [f for _, _, files in os.walk(input_dir) for f in files if f.endswith(extension)]
 
 ### Read data from files
+outer = []
 for fn in file_names:
-  outer = []
   with open(input_dir + '/' + fn, 'rt') as f:
     reader = csv.reader(f)
     row_num = 1
@@ -65,7 +65,7 @@ if mode == 'steady-state':
     writer.writerow(['mean', 'sd', 'se', 'ci'])
     writer.writerow([mean, sd, se, ci])
 else:
-  # Compute mean
+  # Compute means across replications
   zipped = zip(*[lst for lst in outer])
   init_means = list(map(lambda x: sum(x)/len(outer), zipped))
   means = []
@@ -78,19 +78,9 @@ else:
         means += [sum([init_means[i+s] for s in range(-i, i+1)]) / (2*(i+1) - 1)]
       else:
         means += [sum([init_means[i+s] for s in range(-window_size, window_size+1)]) / (2*window_size + 1)]
-  # Compute standard deviation
-  zipped = zip(*[lst for lst in outer])
-  sds = [np.sqrt(sum(map(lambda x: (x-mean)**2, tup)) / (len(means) - 1)) for (tup, mean) in zip(zipped, means)]
-  # Compute standard error for the mean
-  ses = list(map(lambda x: x/np.sqrt(len(means)), sds))
-  # Compute confidence intervals for the mean
-  cis = list(map(lambda x: x * stats.t.ppf(0.5 + confidence/2, len(means)-1), ses))
   # Save to a file
   fn = input_dir + '/' + mode + '_{}'.format(window_size)
   with open(fn, 'w', newline='', encoding='utf-8') as f:
     writer = csv.writer(f, delimiter=',')
-    zip_input = [means, sds, ses, cis]
-    out_headers = ['mean', 'sd', 'se', 'ci']
-    writer.writerow(out_headers)
-    for tup in zip(*zip_input):
-      writer.writerow(tup)
+    for mean in means:
+      writer.writerow([mean])
