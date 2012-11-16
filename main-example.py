@@ -16,12 +16,15 @@ parser.add_argument('int_rate', metavar='interarrival_rate',
                     type=int, help='mean packet interarrival rate in seconds')
 parser.add_argument('sr_rate', metavar='service_rate',
                     type=int, help='mean packet service rate in seconds')
+parser.add_argument('--id', dest='id', default=0,
+                    type=int, help='simulation run id (default: 0)')
 parser.add_argument('--seed', dest='seed', default=int(round(time.time())),
                     type=int, help='seed for the PRNG (default: current system timestamp)')
 args = parser.parse_args()
 sim_duration = args.sim_duration
 interarrival_rate = args.int_rate
 service_rate = args.sr_rate
+sim_id = args.id
 seed = args.seed
   
 ### Initialize
@@ -33,6 +36,7 @@ se.prng = np.random.RandomState(seed)
 event_handler = mm1.MM1EventHandler()
 event_handler.interarrival_rate = interarrival_rate
 event_handler.service_rate = service_rate
+event_handler.sim_id = sim_id
   
 ### Simulate
 # Schedule finishing event

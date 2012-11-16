@@ -137,11 +137,15 @@ class MM1EventHandler(sim.EventHandler):
     """
     Save statistics when simulation ends
     """
-    # Calculate mean delay
+    # Check if folder exists
+    path = "delays_{}_{}".format(self._interarrival_rate, self._service_rate)
+    if not os.path.exists(path):
+      os.makedirs(path)
+    # Calculate delays
     arrivals_len = len(self._arrivals)
     departures_len = len(self._departures)
     if arrivals_len == 0 or departures_len == 0:
-      print("Mean waiting time unavailable")
+      print("Empty list(s) encountered")
     else:
       if arrivals_len >= departures_len:
         self._arrivals = self._arrivals[:departures_len]
@@ -149,11 +153,11 @@ class MM1EventHandler(sim.EventHandler):
         self._departures = self._departures[:arrivals_len]
       delays = list(map(lambda x,y: x-y, self._departures, self._arrivals))
       # Save to a file
-      fname = "delays_{}_{}.out".format(self._interarrival_rate,
-                                        self._service_rate)
-      with open(fname, mode='a', newline='', encoding='utf-8') as f:
+      fn = "delays_{}.out".format(self.sim_id)
+      with open(path + "/" + fn, mode='w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f, delimiter=',')
-        writer.writerow(delays)
+        for d in delays:
+          writer.writerow([d])
   
 
 class MM1EventHandlerTests(unittest.TestCase):
