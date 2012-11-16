@@ -32,7 +32,8 @@ try:
   # One process at a time
   if batch_size == 1:
     for n in range(repetitions):
-      sub.call("python main-example.py {} {} {} --seed={} --id={}".format(sim_duration, interarrival_rate, service_rate, n+init_seed, n), shell=True)
+      cmd = "python main-example.py {} {} {} --seed={} --id={}".format(sim_duration, interarrival_rate, service_rate, n+init_seed, n)
+      sub.call(cmd, shell=True)
   # In batches
   else:
     # Split num of repetitions into batches
@@ -40,7 +41,10 @@ try:
     remainder = repetitions % batch_size
     # Run the simulations in parallel as subprocesses
     num_proc = batch_size if batch_size <= repetitions else remainder
-    procs = [sub.Popen("python main-example.py {} {} {} --seed={} --id={}".format(sim_duration, interarrival_rate, service_rate, n+init_seed, n), shell=True) for n in range(num_proc)]
+    procs = []
+    for n in range(num_proc):
+      cmd = "python main-example.py {} {} {} --seed={} --id={}".format(sim_duration, interarrival_rate, service_rate, n+init_seed, n)
+      procs += [sub.Popen(cmd, shell=True)]
     while True:
       procs_poll = list(map(lambda x: x.poll() != None, procs))
       if not all(procs_poll):
@@ -48,7 +52,8 @@ try:
       elif num_proc < repetitions:
         temp_num = batch_size if num_proc + batch_size <= repetitions else remainder
         for n in range(num_proc, num_proc + temp_num):
-          procs += [sub.Popen("python main-example.py {} {} {} --seed={} --id={}".format(sim_duration, interarrival_rate, service_rate, n+init_seed, n), shell=True)]
+          cmd = "python main-example.py {} {} {} --seed={} --id={}".format(sim_duration, interarrival_rate, service_rate, n+init_seed, n)
+          procs += [sub.Popen(cmd, shell=True)]
         num_proc += temp_num
       else:
         break
