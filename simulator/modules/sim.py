@@ -9,17 +9,6 @@ import time
 import unittest
 
 
-class Singleton(type):
-  """
-  Metaclass for constructing singleton classes
-  """
-  def __init__(self, name, bases, namespace):
-    self._obj = type(name, bases, namespace)()
-  
-  def __call__(self):
-    return self._obj
-  
-
 class PRNG:
   """
   Represents default PRNG (currently, wrapper class for random module)
@@ -127,12 +116,15 @@ class EventHandler(metaclass=ABCMeta):
   """
   Abstract base class for event handlers
   """
-  def __init__(self):
+  def __init__(self, simulation_engine):
     """
     Constructs EventHandler object
+
+    Keyword arguments:
+    simulation_engine -- SimulationEngine instance
     """
-    # Get instance of SimulationEngine object
-    self._simulation_engine = SimulationEngine()
+    # Connect with SimulationEngine
+    self._simulation_engine = simulation_engine
     # Register callback functions:
     # start of the simulation
     self._simulation_engine.register_callback(self._handle_start, SimulationEngine.START_CALLBACK)
@@ -166,7 +158,7 @@ class EventHandler(metaclass=ABCMeta):
     pass
   
 
-class SimulationEngine(metaclass=Singleton):
+class SimulationEngine:
   """
   Represents the main engine of a DES simulation platform
   """
@@ -193,7 +185,23 @@ class SimulationEngine(metaclass=Singleton):
     self._callback_dict = {self.START_CALLBACK: [], self.STOP_CALLBACK: [], self.EVENT_CALLBACK: []}
     # Initialize default PRNG
     self._prng = PRNG()
-  
+    # Initialize event handler
+    self._event_handler = None
+
+  @property
+  def event_handler(self):
+    """
+    Returns attached EventHandler
+    """
+    return self._event_handler
+
+  @event_handler.setter
+  def event_handler(self, event_handler):
+    """
+    Attaches EventHandler
+    """
+    self._event_handler = event_handler
+
   @property
   def simulation_time(self):
     """
@@ -229,6 +237,9 @@ class SimulationEngine(metaclass=Singleton):
     """
     Starts simulation
     """
+    # Check whether an EventHandler is attached; if not, throw an error
+    if not self._event_handler:
+      raise Exception("No EventHandler attached!")
     # Notify of the start of simulation; event handlers should
     # generate first event
     self._notify_start()
@@ -304,47 +315,3 @@ class SimulationEngine(metaclass=Singleton):
     """
     for func in self._callback_dict[self.EVENT_CALLBACK]: func(event)
   
-
-class SimulationEngineTests(unittest.TestCase):
-  def setUp(self):
-    self.sim = SimulationEngine()
-  
-  def test_singleton_behaviour(self):
-    sim = SimulationEngine()
-    self.assertEqual(self.sim, sim)
-  
-  def test_notify_start(self):
-    def f(): print("Callback received")
-    self.sim.register_callback(f, SimulationEngine.START_CALLBACK)
-    self.sim.stop(1)
-    self.sim.start()
-  
-  def test_notify_stop(self):
-    def f(): print("Callback received")
-    self.sim.register_callback(f, SimulationEngine.STOP_CALLBACK)
-    self.sim.stop(1)
-    self.sim.start()
-  
-  def test_notify_event(self):
-    def f(e): print("Callback received. Event: {}@{}".format(e.identifier, e.time))
-    self.sim.register_callback(f, SimulationEngine.EVENT_CALLBACK)
-    self.sim.stop(2)
-    self.sim.schedule(Event("Dummy", 1))
-    self.sim.start()
-  
-
-class EventTests(unittest.TestCase):
-  def setUp(self):
-    self.e1 = Event("Arrival", 10)
-    self.e2 = Event("Arrival", 10, special="Special")
-  
-  def test_properties(self):
-    self.assertEqual(self.e1.identifier, "Arrival")
-    self.assertEqual(self.e1.time, 10)
-    self.assertEqual(self.e2.identifier, "Arrival")
-    self.assertEqual(self.e2.time, 10)
-    self.assertEqual(self.e2.kwargs.get('special', None), "Special")
-  
-
-if __name__ == '__main__':
-  unittest.main()

@@ -3,7 +3,7 @@
 
 import csv
 import os.path
-import des.sim as sim
+import simulator.modules.sim as sim
 import unittest
 
 
@@ -15,11 +15,11 @@ class MM1EventHandler(sim.EventHandler):
   ARRIVAL_EVENT = "Arrival"
   DEPARTURE_EVENT = "Departure"
   
-  def __init__(self):
+  def __init__(self, simulation_engine):
     """
     Constructs MM1EventHandler object
     """
-    super().__init__()
+    super().__init__(simulation_engine)
     # Initialize mean interarrival time
     self._interarrival_rate = 0
     # Initialize mean service time
@@ -103,6 +103,18 @@ class MM1EventHandler(sim.EventHandler):
       # Schedule next departure event
       self._schedule_departure_event(event.time)
   
+  def _generate_arrival_event(self, base_time):
+    """
+    Returns next arrival event
+
+    Keyword arguments:
+    base_time -- Current simulation time
+    """
+    # Calculate interarrival time
+    delta_time = self._simulation_engine.prng.exponential(1/self._interarrival_rate)
+    # Create next arrival event
+    return sim.Event(MM1EventHandler.ARRIVAL_EVENT, base_time + delta_time)
+
   def _schedule_arrival_event(self, base_time):
     """
     Schedules next arrival event
@@ -110,13 +122,22 @@ class MM1EventHandler(sim.EventHandler):
     Keyword arguments:
     base_time -- Current simulation time
     """
-    # Calculate interarrival time
-    delta_time = self._simulation_engine.prng.exponential(1/self._interarrival_rate)
-    # Create next arrival event
-    event = sim.Event(MM1EventHandler.ARRIVAL_EVENT, base_time + delta_time)
+    event = self._generate_arrival_event(base_time)
     # Schedule the event
     self._simulation_engine.schedule(event)
   
+  def _generate_departure_event(self, base_time):
+    """
+    Returns next departure event
+
+    Keyword arguments:
+    base_time -- Current simulation time
+    """
+    # Calculate service time
+    delta_time = self._simulation_engine.prng.exponential(1/self._service_rate)
+    # Create next departure event
+    return sim.Event(MM1EventHandler.DEPARTURE_EVENT, base_time + delta_time)
+
   def _schedule_departure_event(self, base_time):
     """
     Schedules next departure event
@@ -124,10 +145,7 @@ class MM1EventHandler(sim.EventHandler):
     Keyword arguments:
     base_time -- Current simulation time
     """
-    # Calculate service time
-    delta_time = self._simulation_engine.prng.exponential(1/self._service_rate)
-    # Create next departure event
-    event = sim.Event(MM1EventHandler.DEPARTURE_EVENT, base_time + delta_time)
+    event = self._generate_departure_event(base_time)
     # Schedule the event
     self._simulation_engine.schedule(event)
     # Set is processing flag to True
@@ -159,16 +177,3 @@ class MM1EventHandler(sim.EventHandler):
         for d in delays:
           writer.writerow([d])
   
-
-class MM1EventHandlerTests(unittest.TestCase):
-  def setUp(self):
-    self.eh = MM1EventHandler()
-    
-  def test_properties(self):
-    self.eh.interarrival_rate = 0.05
-    self.eh.service_rate = 0.1
-    self.assertEqual(self.eh.interarrival_rate, 0.05)
-    self.assertEqual(self.eh.service_rate, 0.1)
-
-if __name__ == '__main__':
-  unittest.main()

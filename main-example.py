@@ -3,8 +3,8 @@
 
 import argparse
 import numpy as np
-import des.mm1 as mm1
-import des.sim as sim
+import simulator.modules.mm1 as mm1
+import simulator.modules.sim as sim
 import time
 
 
@@ -32,8 +32,11 @@ seed = args.seed
 se = sim.SimulationEngine()
 # Seed NumPy PRNG
 se.prng = np.random.RandomState(seed)
-# Create MM1 specific event handler
-event_handler = mm1.MM1EventHandler()
+# Create MM1 specific event handler, and
+# connect it with the simulation engine
+event_handler = mm1.MM1EventHandler(se)
+se.event_handler = event_handler
+# Set simulation parameters
 event_handler.interarrival_rate = interarrival_rate
 event_handler.service_rate = service_rate
 event_handler.sim_id = sim_id
