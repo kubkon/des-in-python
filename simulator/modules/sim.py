@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from abc import ABCMeta, abstractmethod
-
+from abc import abstractmethod, ABCMeta
 import datetime
 import random
 import time
@@ -11,7 +10,7 @@ import unittest
 
 class PRNG:
   """
-  Represents default PRNG (currently, wrapper class for random module)
+  Represents default PRNG (currently, wrapper class for random module).
   """
   def __init__(self):
     """
@@ -34,7 +33,7 @@ class PRNG:
     """
     Sets new seed value
     
-    Keyword arguments:
+    Arguments:
     seed -- New seed value
     """
     self._seed = seed
@@ -45,7 +44,7 @@ class PRNG:
     """
     Returns a random integer N such that a <= N <= b
     
-    Keyword arguments:
+    Arguments:
     a -- Lower bound
     b -- Upper bound
     """
@@ -56,7 +55,7 @@ class PRNG:
     Returns a random floating point number N such that
     a <= N <= b for a <= b and b <= N <= a for b < a
     
-    Keyword arguments:
+    Arguments:
     a -- Lower bound
     b -- Upper bound
     """
@@ -67,7 +66,7 @@ class PRNG:
     Returns a random floating point number N drawn
     from an exponential distribution with parameter lambd (1 / E[X])
     
-    Keyword arguments:
+    Arguments:
     lambd -- Lambda parameter of exponential distribution (1 / E[X])
     """
     return random.expovariate(lambd)
@@ -75,16 +74,18 @@ class PRNG:
 
 class Event:
   """
-  Represents an abstract event
+  Represents an abstract event.
   """
   def __init__(self, identifier, time, **kwargs):
     """
     Constructs Event instance
     
-    Keyword arguments:
+    Arguments:
     identifier -- ID/type of this event
     time -- Time of occurring of this event
-    kwargs -- Optional arguments
+
+    Keyword arguments:
+    kwargs -- Optional keyword arguments
     """
     self._identifier = identifier
     self._time = time
@@ -120,8 +121,8 @@ class EventHandler(metaclass=ABCMeta):
     """
     Constructs EventHandler object
 
-    Keyword arguments:
-    simulation_engine -- SimulationEngine instance
+    Arguments:
+    simulation_engine = SimulationEngine instance
     """
     # Connect with SimulationEngine
     self._simulation_engine = simulation_engine
@@ -152,7 +153,7 @@ class EventHandler(metaclass=ABCMeta):
     """
     Abstract method for handling imminent events
     
-    Keyword arguments:
+    Arguments:
     event -- Event to be handled
     """
     pass
@@ -176,7 +177,7 @@ class SimulationEngine:
     # Create empty event list
     self._event_list = []
     # Initialize current simulation time
-    self._simulation_time = 0
+    self.simulation_time = 0
     # Initialize finish time
     self._finish_time = 0
     # Flag representing finishing event
@@ -184,61 +185,16 @@ class SimulationEngine:
     # Initialize callback dictionary
     self._callback_dict = {self.START_CALLBACK: [], self.STOP_CALLBACK: [], self.EVENT_CALLBACK: []}
     # Initialize default PRNG
-    self._prng = PRNG()
+    self.prng = PRNG()
     # Initialize event handler
-    self._event_handler = None
+    self.event_handler = None
 
-  @property
-  def event_handler(self):
-    """
-    Returns attached EventHandler
-    """
-    return self._event_handler
-
-  @event_handler.setter
-  def event_handler(self, event_handler):
-    """
-    Attaches EventHandler
-    """
-    self._event_handler = event_handler
-
-  @property
-  def simulation_time(self):
-    """
-    Returns current simulation time
-    """
-    return self._simulation_time
-  
-  @simulation_time.setter
-  def simulation_time(self, simulation_time):
-    """
-    Sets current simulation time
-    
-    Keyword arguments:
-    simulation_time -- Simulation time to be set
-    """
-    self._simulation_time = simulation_time
-  
-  @property
-  def prng(self):
-    """
-    Returns used PRNG
-    """
-    return self._prng
-  
-  @prng.setter
-  def prng(self, prng):
-    """
-    Sets PRNG to be used by the simulation engine
-    """
-    self._prng = prng
-  
   def start(self):
     """
     Starts simulation
     """
     # Check whether an EventHandler is attached; if not, throw an error
-    if not self._event_handler:
+    if not self.event_handler:
       raise Exception("No EventHandler attached!")
     # Notify of the start of simulation; event handlers should
     # generate first event
@@ -248,7 +204,7 @@ class SimulationEngine:
       # Remove the imminent event from the event list
       imminent = self._event_list.pop()
       # Advance clock to the imminent event
-      self._simulation_time = imminent.time
+      self.simulation_time = imminent.time
       # Notify of the current event
       self._notify_event(imminent)
     # Notify of the end of the simulation
@@ -258,7 +214,7 @@ class SimulationEngine:
     """
     Schedules finishing event
     
-    Keyword arguments:
+    Arguments:
     finish_time -- Time of occurrence of the finishing event
     """
     # Check if finishing event already scheduled
@@ -273,7 +229,7 @@ class SimulationEngine:
     """
     Schedules event (adds it to the event list)
     
-    Keyword arguments:
+    Arguments:
     event -- Event to be scheduled
     """
     # Discard new event if happens after the finishing event
@@ -288,7 +244,7 @@ class SimulationEngine:
     """
     Register function for callback when simulation ends
     
-    Keyword arguments:
+    Arguments:
     func -- Function to call back
     ttype -- Type of the callback
     """
@@ -310,7 +266,7 @@ class SimulationEngine:
     """
     Notifies of an imminent event
     
-    Keyword arguments:
+    Arguments:
     event -- The imminent event 
     """
     for func in self._callback_dict[self.EVENT_CALLBACK]: func(event)

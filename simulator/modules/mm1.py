@@ -21,9 +21,9 @@ class MM1EventHandler(sim.EventHandler):
     """
     super().__init__(simulation_engine)
     # Initialize mean interarrival time
-    self._interarrival_rate = 0
+    self.interarrival_rate = 0
     # Initialize mean service time
-    self._service_rate = 0
+    self.service_rate = 0
     # Initialize lenght of queue
     self._queue_length = 0
     # Initialize is processing flag
@@ -32,40 +32,6 @@ class MM1EventHandler(sim.EventHandler):
     self._arrivals = []
     # Initialize list of departure times
     self._departures = []
-  
-  @property
-  def interarrival_rate(self):
-    """
-    Returns mean interarrival rate
-    """
-    return self._interarrival_rate
-  
-  @interarrival_rate.setter
-  def interarrival_rate(self, interarrival_rate):
-    """
-    Sets mean interarrival rate
-    
-    Keyword arguments:
-    interarrival_rate -- Interarrival rate to be set
-    """
-    self._interarrival_rate = interarrival_rate
-  
-  @property
-  def service_rate(self):
-    """
-    Returns mean service rate
-    """
-    return self._service_rate
-  
-  @service_rate.setter
-  def service_rate(self, service_rate):
-    """
-    Sets mean service rate
-    
-    Keyword arguments:
-    service_rate -- Service rate to be set
-    """
-    self._service_rate = service_rate
   
   def _handle_start(self):
     """
@@ -111,7 +77,7 @@ class MM1EventHandler(sim.EventHandler):
     base_time -- Current simulation time
     """
     # Calculate interarrival time
-    delta_time = self._simulation_engine.prng.exponential(1/self._interarrival_rate)
+    delta_time = self._simulation_engine.prng.exponential(1/self.interarrival_rate)
     # Create next arrival event
     return sim.Event(MM1EventHandler.ARRIVAL_EVENT, base_time + delta_time)
 
@@ -134,7 +100,7 @@ class MM1EventHandler(sim.EventHandler):
     base_time -- Current simulation time
     """
     # Calculate service time
-    delta_time = self._simulation_engine.prng.exponential(1/self._service_rate)
+    delta_time = self._simulation_engine.prng.exponential(1/self.service_rate)
     # Create next departure event
     return sim.Event(MM1EventHandler.DEPARTURE_EVENT, base_time + delta_time)
 
@@ -156,7 +122,7 @@ class MM1EventHandler(sim.EventHandler):
     Save statistics when simulation ends
     """
     # Check if folder exists
-    path = "delays_{}_{}".format(self._interarrival_rate, self._service_rate)
+    path = "delays_{}_{}".format(self.interarrival_rate, self.service_rate)
     if not os.path.exists(path):
       os.makedirs(path)
     # Calculate delays

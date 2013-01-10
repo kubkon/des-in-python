@@ -3,7 +3,6 @@
 
 from simulator.modules.sim import *
 
-
 class TestEventHandler(EventHandler):
   def __init__(self, simulation_engine):
     super().__init__(simulation_engine)

@@ -2,8 +2,9 @@
 # encoding: utf-8
 
 import numpy as np
-from simulator.modules.mm1 import *
+from simulator.modules.mm1 import MM1EventHandler
 from simulator.modules.sim import SimulationEngine, Event
+import unittest
 
 
 class MM1EventHandlerTests(unittest.TestCase):
