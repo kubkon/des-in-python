@@ -68,6 +68,8 @@ class MM1EventHandler(sim.EventHandler):
     if not self._is_processing and self._queue_length > 0:
       # Schedule next departure event
       self._schedule_departure_event(event.time)
+      # Set is processing flag to True
+      self._is_processing = True
   
   def _generate_arrival_event(self, base_time):
     """
@@ -114,8 +116,6 @@ class MM1EventHandler(sim.EventHandler):
     event = self._generate_departure_event(base_time)
     # Schedule the event
     self._simulation_engine.schedule(event)
-    # Set is processing flag to True
-    self._is_processing = True
   
   def _save_statistics(self):
     """
