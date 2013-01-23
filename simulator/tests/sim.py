@@ -10,13 +10,13 @@ class TestEventHandler(EventHandler):
     self.stop_callback_received = False
     self.events = []
 
-  def _handle_start(self):
+  def handle_start(self):
     self.start_callback_received = True
 
-  def _handle_stop(self):
+  def handle_stop(self):
     self.stop_callback_received = True
 
-  def _handle_event(self, event):
+  def handle_event(self, event):
     self.events.append(event)
 
 

@@ -33,19 +33,19 @@ class MM1EventHandler(sim.EventHandler):
     # Initialize list of departure times
     self._departures = []
   
-  def _handle_start(self):
+  def handle_start(self):
     """
     Overriden method
     """
     self._schedule_arrival_event(self._simulation_engine.simulation_time)
   
-  def _handle_stop(self):
+  def handle_stop(self):
     """
     Overriden method
     """
     self._save_statistics()
   
-  def _handle_event(self, event):
+  def handle_event(self, event):
     """
     Overriden method
     """

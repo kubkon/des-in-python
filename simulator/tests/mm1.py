@@ -40,35 +40,35 @@ class MM1EventHandlerTests(unittest.TestCase):
 
   def test_handle_arrival_event(self):
     event_time = 1.0
-    self.eh._handle_event(Event(MM1EventHandler.ARRIVAL_EVENT, event_time))
+    self.eh.handle_event(Event(MM1EventHandler.ARRIVAL_EVENT, event_time))
     self.assertEqual(self.eh._queue_length, 1)
     self.assertEqual(self.eh._arrivals, [event_time])
 
   def test_handle_departure_event(self):
     self.eh._queue_length = 1
     event_time = 1.0
-    self.eh._handle_event(Event(MM1EventHandler.DEPARTURE_EVENT, event_time))
+    self.eh.handle_event(Event(MM1EventHandler.DEPARTURE_EVENT, event_time))
     self.assertEqual(self.eh._queue_length, 0)
     self.assertEqual(self.eh._departures, [event_time])
 
   def test_is_processing_for_arrival_and_busy(self):
     self.eh._is_processing = True
-    self.eh._handle_event(Event(MM1EventHandler.ARRIVAL_EVENT, 1.0))
+    self.eh.handle_event(Event(MM1EventHandler.ARRIVAL_EVENT, 1.0))
     self.assertTrue(self.eh._is_processing)
 
   def test_is_processing_for_arrival_and_idle(self):
     self.eh._is_processing = False
-    self.eh._handle_event(Event(MM1EventHandler.ARRIVAL_EVENT, 1.0))
+    self.eh.handle_event(Event(MM1EventHandler.ARRIVAL_EVENT, 1.0))
     self.assertTrue(self.eh._is_processing)
 
   def test_is_processing_for_departure_and_empty_queue(self):
     self.eh._queue_length = 1
-    self.eh._handle_event(Event(MM1EventHandler.DEPARTURE_EVENT, 1.0))
+    self.eh.handle_event(Event(MM1EventHandler.DEPARTURE_EVENT, 1.0))
     self.assertFalse(self.eh._is_processing)
 
   def test_is_processing_for_departure_and_nonempty_queue(self):
     self.eh._queue_length = 2
-    self.eh._handle_event(Event(MM1EventHandler.DEPARTURE_EVENT, 1.0))
+    self.eh.handle_event(Event(MM1EventHandler.DEPARTURE_EVENT, 1.0))
     self.assertTrue(self.eh._is_processing)
 
 
